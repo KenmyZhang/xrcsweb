@@ -11,9 +11,6 @@ export default {
   name: "App",
   created() {},
   mounted() {
-    setInterval(() => {
-      this.$store.dispatch("hanldeGetTotalUnread");
-    }, 5000);
     const userInfo = sessionStorage.getItem("userInfo");
     if (userInfo) {
       this.$store.commit("setUserInfo", JSON.parse(userInfo));
@@ -24,7 +21,7 @@ export default {
 };
 </script>
 <style rel="stylesheet/scss" lang="scss">
-.page {
+.public-page {
   padding: 12px;
   box-sizing: border-box;
   font-size: 14px;
@@ -125,6 +122,12 @@ export default {
 }
 .pr{
   position: relative;
+}
+.tr{
+  text-align: right;
+}
+.tc{
+  text-align: center;
 }
 </style>
 

@@ -38,7 +38,7 @@ export default {
       console.log("网络已连接");
       const socketStatus = getSocketStatus();
       const { path } = this.$route;
-      if (!socketStatus && ["/admin/addressBook", "/admin/chat"].includes(path)) {
+      if (!socketStatus && ["/addressBook", "/chat"].includes(path)) {
         window.location.reload();
       }
     },

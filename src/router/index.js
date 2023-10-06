@@ -8,26 +8,66 @@ Vue.use(VueRouter)
 
 
 export const nomorlRoutes = {
-  path: "/admin",
+  path: "/",
   component: Layout,
   children: [
     {
-      path: "chat",
-      component: () => import("../views/Chat/index.vue"),
+      path: "mobileImport",
+      component: () => import("../views/MobileImport/index.vue"),
       meta: {
-        title: '消息',
+        title: '号码导入',
         icon: 'chat'
       }
     },
     {
-      path: "/admin",
+      path: "importHistory",
+      component: () => import("../views/ImportHistory/index.vue"),
+      meta: {
+        title: '号码导入记录',
+        icon: 'chat'
+      }
+    },
+    {
+      path: "chat",
+      component: () => import("../views/Chat/index.vue"),
+      meta: {
+        title: '聊天',
+        icon: 'chat'
+      }
+    },
+    {
+      path: "task",
+      component: () => import("../views/Task/index.vue"),
+      meta: {
+        title: '任务',
+        icon: 'chat'
+      }
+    },
+    {
+      path: "keyword",
+      component: () => import("../views/Keyword/index.vue"),
+      meta: {
+        title: '关键词',
+        icon: 'chat'
+      }
+    },
+    {
+      path: "sayHello",
+      component: () => import("../views/SayHello/index.vue"),
+      meta: {
+        title: '打招呼',
+        icon: 'chat'
+      }
+    },
+    {
+      path: "/",
       redirect: xxx => {
         const userInfo = sessionStorage.getItem('userInfo')
         if (userInfo) {
           const { role_id } = JSON.parse(userInfo)
-          if (role_id == 'admin') return '/admin/customer'
+          if (role_id == 'admin') return '/customer'
         }
-        return '/admin/chat'
+        return '/mobileImport'
       },
       meta: {
         hiddenMenu: true
@@ -56,7 +96,11 @@ const constantRouters = [
   }
 ]
 
-const router = new VueRouter({ routes: constantRouters })
+const router = new VueRouter({
+  mode: 'history',
+  routes: constantRouters,
+
+})
 
 
 export default router

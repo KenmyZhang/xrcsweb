@@ -1,6 +1,6 @@
 <template>
-  <div class="page">
-    <div class="flex-c">
+  <div class="public-page">
+    <div class="flex-c" style="margin-bottom: 12px">
       <el-button
         @click="handelBatchDel"
         class="button"
@@ -9,19 +9,19 @@
         >删除</el-button
       >
       <el-button
-        @click="$refs.update.open({})"
-        class="button"
-        type="primary"
-        size="small"
-        >新增</el-button
-      >
-      <el-button
         @click="getList"
         :loading="loading"
         class="button"
         type="primary"
         size="small"
         >查询</el-button
+      >
+      <el-button
+        @click="$refs.update.open({})"
+        class="button"
+        type="primary"
+        size="small"
+        >新增</el-button
       >
     </div>
 

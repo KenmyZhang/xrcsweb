@@ -52,7 +52,6 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch("hanldeGetTotalUnread");
   },
   mounted() {},
   methods: {
@@ -66,7 +65,7 @@ export default {
 .menu-list {
   height: 100%;
   background: #fff;
-  flex: 0 0 134px;
+  flex: 0 0 160px;
   // padding-right: 12px;
   box-sizing: border-box;
   overflow: scroll;

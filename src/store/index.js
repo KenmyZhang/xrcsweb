@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 import router from '@/router'
 Vue.use(Vuex)
 
-import { getTotalUnread } from '@/api/index'
+// import { getTotalUnread } from '@/api/index'
 export default new Vuex.Store({
   //定义数据，相当于data
   state: {
@@ -30,12 +30,12 @@ export default new Vuex.Store({
   // 操作异步操作mutation（异步）
   actions: {
     async hanldeGetTotalUnread({ commit }, payload) {
-      const { unread_count, result, code } = await getTotalUnread();
-      if(result=='ok' && code ==200){
-        commit('setToTalUnReadMsg', unread_count)
-      }else{
-        console.error('请求获取总数失败');
-      }
+      // const { unread_count, result, code } = await getTotalUnread();
+      // if(result=='ok' && code ==200){
+      //   commit('setToTalUnReadMsg', unread_count)
+      // }else{
+      //   console.error('请求获取总数失败');
+      // }
     }
   },
   //模块化

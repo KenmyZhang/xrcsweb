@@ -34,9 +34,8 @@ export default {
   data() {
     return {
       form: {
-        account: "",
-        account: "82aafbf1-9629-48c9-9af7-3a92b5257750",
-        // account: "1bc81521-cd4c-47b8-a841-f293ebd001a4",
+        // account: "",
+        account: "admin",
       },
       loading: false,
       rules: {
@@ -59,7 +58,7 @@ export default {
         sessionStorage.setItem("account", this.form.account);
         sessionStorage.setItem("token", result.token);
         this.$store.commit("setUserInfo", result);
-        this.$router.push("/admin");
+        this.$router.push("/");
       }
     },
     handleLogin() {

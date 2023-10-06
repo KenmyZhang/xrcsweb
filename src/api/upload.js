@@ -23,3 +23,16 @@ export function uploadFile(data) {
     // params: data,
   })
 }
+
+
+
+// 上传txt电话
+export function phoneUpload(data) {
+  return request({
+    url: `/api/v3/phone/upload`,
+    method: 'post',
+    data,
+    // method: 'get',
+    // params: data,
+  })
+}
