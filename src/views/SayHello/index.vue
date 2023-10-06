@@ -52,11 +52,11 @@
         </template>
       </el-table-column>
       <!-- <el-table-column prop="is_del" label="is_del" /> -->
-      <el-table-column prop="type" label="类型">
+      <!-- <el-table-column prop="type" label="类型">
         <template slot-scope="scope">
           {{ ["文字", "文字", "图片", "", "视频", "语音"][scope.row.type] }}
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column prop="created_time" label="创建日期">
         <template slot-scope="scope">
           {{ getTime(scope.row.created_time) }}

@@ -10,6 +10,9 @@
       <el-form-item>
         <el-button type="primary" @click="getList">查询</el-button>
       </el-form-item>
+      <el-form-item>
+        <el-button @click="handleAdd">新建</el-button>
+      </el-form-item>
     </el-form>
     <el-table :data="tableData" class="table">
       <el-table-column prop="id" label="ID" width="55" />
@@ -18,20 +21,27 @@
       <el-table-column prop="reply_id" label="回复规则id" />
       <el-table-column prop="reply_content" label="回复内容" />
       <el-table-column prop="interval" label="消息延迟" />
-      <el-table-column prop="" label="status" />
-
       <el-table-column prop="status" label="状态">
         <template slot-scope="scope">
-          ['未启动', '已启动'][{{scope.row.status}}]
+          {{
+            scope.row.status === null || scope.row.status === undefined
+              ? "未知"
+              : ["未启动", "已启动"][scope.row.status]
+          }}
         </template>
       </el-table-column>
       <el-table-column prop="handle_status" label="处理状态">
         <template slot-scope="scope">
-          ['未处理', '处理中', '处理完成'][{{scope.row.handle_status}}]
+          {{
+            scope.row.handle_status === null ||
+            scope.row.handle_status === undefined
+              ? "未知"
+              : ["未处理", "处理中", "处理完成"][scope.row.handle_status]
+          }}
         </template>
       </el-table-column>
 
-      <el-table-column prop="created_time" label="创建日期">
+      <el-table-column prop="created_time" label="创建日期" width="180px">
         <template slot-scope="scope">
           {{ getTime(scope.row.created_time) }}
         </template>
@@ -48,14 +58,17 @@
       layout="total, prev, pager, next"
       :total="total"
     />
+    <modify ref="modifyRef" @conform='getList'/>
   </div>
 </template>
 
 <script>
+import Modify from "./Modify.vue";
 import { phoneTask, phoneTaskList } from "@/api";
 import dayjs from "dayjs";
 
 export default {
+  components: { Modify },
   data() {
     return {
       page: 1,
@@ -79,6 +92,9 @@ export default {
   },
   mounted() {},
   methods: {
+    handleAdd() {
+      this.$refs.modifyRef.open({});
+    },
     handleSizeChange(page_num) {
       this.page_num = page_num;
       this.getList();
@@ -92,7 +108,7 @@ export default {
      */
     async getList() {
       this.loading = true;
-      const { data = [], total } = await phoneTask({
+      const { data = [], total } = await phoneTaskList({
         page: this.page,
         page_num: this.page_num,
         status: this.formValues.status,
@@ -142,4 +158,11 @@ export default {
 };
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
+.public-page {
+  display: flex;
+  flex-direction: column;
+  .table {
+    flex: 1;
+  }
+}
 </style>

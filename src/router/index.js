@@ -44,18 +44,18 @@ export const nomorlRoutes = {
       }
     },
     {
-      path: "keyword",
-      component: () => import("../views/Keyword/index.vue"),
-      meta: {
-        title: '关键词',
-        icon: 'chat'
-      }
-    },
-    {
       path: "sayHello",
       component: () => import("../views/SayHello/index.vue"),
       meta: {
         title: '打招呼',
+        icon: 'chat'
+      }
+    },
+    {
+      path: "keyword",
+      component: () => import("../views/Keyword/List.vue"),
+      meta: {
+        title: '关键词',
         icon: 'chat'
       }
     },
