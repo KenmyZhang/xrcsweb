@@ -47,7 +47,7 @@
           {{ getTime(scope.row.created_at) }}
         </template></el-table-column
       >
-      <el-table-column label="操作" fixed="right" align="center" width="110">
+      <el-table-column label="操作" fixed="right" align="center" width="80">
         <template slot-scope="scope">
           <div class="flex-cb" style="justify-content: space-evenly">
             <el-popconfirm
@@ -66,14 +66,6 @@
               @click="$refs.addRef.open(scope.row)"
             >
               编辑
-            </el-button>
-            <el-button
-              style="margin-left: 8px"
-              type="text"
-              size="mini"
-              @click="handleCopy(scope.row)"
-            >
-              复用
             </el-button>
           </div>
         </template>
@@ -144,19 +136,6 @@ export default {
       console.log(`当前页: ${val}`);
       this.page = val;
       this.getTableData();
-    },
-    async handleCopy(row) {
-      const { code } = await keywordAdd({
-        keyword: this.keyword,
-        content: row.content,
-        remark: row.remark,
-      });
-      if (code == 200) {
-        this.$message.success("复用成功");
-        this.getTableData();
-      } else {
-        this.$message.error("复用失败");
-      }
     },
     async handleRemove(row) {
       const { code } = await keywordDel({ ids: [row.id] });
