@@ -5,7 +5,7 @@
       <el-checkbox v-model="rm_reply">去掉已回复</el-checkbox>
     </div>
     <div class="upload-box">
-      <UploadFile :rm_dup="rm_dup" :rm_reply="rm_reply" />
+      <UploadFile :rm_dup="rm_dup" :rm_reply="rm_reply"/>
     </div>
   </div>
 </template>

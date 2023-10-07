@@ -176,11 +176,5 @@ export default {
 };
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
-.public-page {
-  display: flex;
-  flex-direction: column;
-  .table {
-    flex: 1;
-  }
-}
+
 </style>

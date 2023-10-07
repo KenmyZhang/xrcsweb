@@ -1,26 +1,36 @@
 <template>
   <div class="public-page">
     <el-form :inline="true" :model="formValues" size="small">
+      <el-form-item label="任务领取账号" prop="account">
+        <el-input v-model="formValues.account" placeholder="请输入"></el-input>
+      </el-form-item>
+      <el-form-item label="文件名" prop="filename">
+        <el-input v-model="formValues.filename" placeholder="请输入"></el-input>
+      </el-form-item>
       <el-form-item label="状态">
         <el-select v-model="formValues.status" placeholder="活动区域" clearable>
           <el-option label="未启动" :value="0"></el-option>
           <el-option label="已启动" :value="1"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="getList">查询</el-button>
+      <el-form-item label="任务创建时间" prop="created_time">
+        <el-date-picker
+          v-model="formValues.created_time"
+          type="date"
+          placeholder="选择日期"
+          value-format="yyyy-MM-dd"
+        >
+        </el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button @click="handleAdd">新建</el-button>
+        <el-button type="primary" @click="getList">查询</el-button>
       </el-form-item>
     </el-form>
     <el-table :data="tableData" class="table">
       <el-table-column prop="id" label="ID" width="55" />
       <el-table-column prop="account" label="账户" />
       <el-table-column prop="filename" label="文件名" />
-      <el-table-column prop="reply_id" label="回复规则id" />
-      <el-table-column prop="reply_content" label="回复内容" />
-      <el-table-column prop="interval" label="消息延迟" />
+      <el-table-column prop="app_key" label="app_key" />
       <el-table-column prop="status" label="状态">
         <template slot-scope="scope">
           <el-tag
@@ -29,8 +39,12 @@
             v-if="scope.row.status === null || scope.row.status === undefined"
             >未知</el-tag
           >
-          <el-tag type="info" v-if="scope.row.status == 0" size="small">未启动</el-tag>
-          <el-tag type="success" v-if="scope.row.status == 1" size="small">已启动</el-tag>
+          <el-tag type="info" v-if="scope.row.status == 0" size="small"
+            >未启动</el-tag
+          >
+          <el-tag type="success" v-if="scope.row.status == 1" size="small"
+            >已启动</el-tag
+          >
         </template>
       </el-table-column>
       <el-table-column prop="handle_status" label="处理状态">
@@ -49,12 +63,6 @@
           {{ getTime(scope.row.created_time) }}
         </template>
       </el-table-column>
-
-      <el-table-column label="操作" width="50" align="center" fixed="right">
-        <template slot-scope="scope">
-          <el-button type="text" @click="startTask(scope.row)">开启</el-button>
-        </template>
-      </el-table-column>
     </el-table>
     <el-pagination
       class="tr"
@@ -67,24 +75,24 @@
       layout="total, prev, pager, next"
       :total="total"
     />
-    <modify ref="modifyRef" @conform="getList" />
   </div>
 </template>
 
 <script>
-import Modify from "./Modify.vue";
-import { phoneTaskStart, phoneTaskList } from "@/api";
+import { filterTasks } from "@/api";
 import dayjs from "dayjs";
 
 export default {
-  components: { Modify },
   data() {
     return {
       page: 1,
       page_num: 10,
       total: 0,
       formValues: {
+        account: "",
+        filename: "",
         status: "",
+        created_time: "",
       },
       tableData: [],
       loading: false,
@@ -112,24 +120,18 @@ export default {
       this.page = page;
       this.getList();
     },
-    async startTask(row) {
-      const { code } = await phoneTaskStart({ id: row.id });
-      if (code == 200) {
-        this.$message.success("开启成功");
-        this.getList();
-      } else {
-        this.$message.success("开启失败");
-      }
-    },
     /**
      * 表格数据获取
      */
     async getList() {
       this.loading = true;
-      const { data = [], total } = await phoneTaskList({
+      const { data = [], total } = await filterTasks({
         page: this.page,
         page_num: this.page_num,
         status: this.formValues.status,
+        filename: this.formValues.filename,
+        account: this.formValues.account,
+        created_time: this.formValues.created_time,
       });
       this.loading = false;
       this.total = total;
@@ -176,4 +178,11 @@ export default {
 };
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
+.public-page {
+  display: flex;
+  flex-direction: column;
+  .table {
+    flex: 1;
+  }
+}
 </style>

@@ -36,10 +36,18 @@ export const nomorlRoutes = {
       }
     },
     {
+      path: "filterTask",
+      component: () => import("../views/FilterTask/index.vue"),
+      meta: {
+        title: '筛选任务',
+        icon: 'chat'
+      }
+    },
+    {
       path: "task",
       component: () => import("../views/Task/index.vue"),
       meta: {
-        title: '任务',
+        title: '发送任务',
         icon: 'chat'
       }
     },

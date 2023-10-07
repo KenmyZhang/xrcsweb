@@ -27,7 +27,14 @@ service.interceptors.request.use(
 // response 拦截器
 service.interceptors.response.use(
   response => {
-    // const { code } = response.data
+    const { code, msg } = response.data
+    if(code == 401 && msg=='token失效'){
+      Notification.error({
+        title: response.data.msg || '请求出错~'
+      })
+      location.href='/login'
+      return Promise.reject('error')
+    }
     // if (code != 200) {
     //   Notification.error({
     //     title: response.data.msg || '请求出错~'
