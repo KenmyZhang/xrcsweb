@@ -34,8 +34,8 @@ export default {
   data() {
     return {
       form: {
-        // account: "",
-        account: "admin",
+        account: "",
+        // account: "admin",
       },
       loading: false,
       rules: {
