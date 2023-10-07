@@ -69,6 +69,7 @@ export default {
 
       if (needInit) {
         this.page = 1;
+        this.list = [];
       }
       const { data = [], total } = await msgList({
         phone: this.row.phone,
@@ -76,9 +77,6 @@ export default {
         page_num: this.page_num,
       });
       this.total = total || 0;
-      if (needInit) {
-        this.list = [];
-      }
       if (this.total > this.list.length) {
         this.page++;
         // if(data[2])  data[2].receiver='998'
