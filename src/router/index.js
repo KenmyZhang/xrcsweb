@@ -53,7 +53,7 @@ export const nomorlRoutes = {
     },
     {
       path: "keyword",
-      component: () => import("../views/Keyword/List.vue"),
+      component: () => import("../views/Keyword/index.vue"),
       meta: {
         title: '关键词',
         icon: 'chat'

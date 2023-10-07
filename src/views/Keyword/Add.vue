@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :title="form.id ? '编辑关键词配置' : '新增关键词配置'"
+    :title="form.id ? '编辑关键词' : '新增关键词'"
     :visible.sync="show"
     width="70%"
     destroy-on-close

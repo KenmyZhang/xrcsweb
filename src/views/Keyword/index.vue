@@ -1,28 +1,100 @@
 <template>
-  <div>
-    <el-dialog
-      title="密码验证"
-      :visible.sync="show"
-      width="70%"
-      destroy-on-close
-      :modal-append-to-body="true"
+  <div class="public-page">
+    <div class="flex-c" style="margin-bottom: 12px">
+      关键词：
+      <el-input
+        placeholder="请输入关键词"
+        v-model="keyword"
+        size="small"
+        clearable
+        style="width: 300px; margin-right: 12px"
+      ></el-input>
+      <el-button
+        class=""
+        size="small"
+        type="primary"
+        @click="() => getTableData()"
+        >查询</el-button
+      >
+      <el-button
+        class=""
+        size="small"
+        type="primary"
+        @click="$refs.addRef.open({})"
+        >新增</el-button
+      >
+      <el-button
+        class=""
+        size="small"
+        type="primary"
+        :disabled="multipleSelection.length == 0"
+        @click="batchRemove"
+        >批量删除</el-button
+      >
+    </div>
+    <el-table
+      class="w100"
+      :data="tableData"
+      @selection-change="(e) => (multipleSelection = e)"
     >
-      <div style="padding: 0 36px 0 0">
-        <el-form ref="form" label-width="80px">
-          <el-form-item label="密码" prop="content">
-            <el-input placeholder="请输入密码" v-model="passwd"></el-input>
-          </el-form-item>
-
-          <el-form-item>
-            <el-button type="primary" @click="handleSubmit" :disabled="!passwd"
-              >确定</el-button
+      <el-table-column type="selection" width="55"> </el-table-column>
+      <el-table-column prop="id" label="ID" width="55" />
+      <el-table-column prop="keyword" label="关键词" />
+      <el-table-column prop="content" label="内容"> </el-table-column>
+      <el-table-column prop="remark" label="备注"> </el-table-column>
+      <el-table-column prop="created_at" label="添加日期">
+        <template slot-scope="scope">
+          {{ getTime(scope.row.created_at) }}
+        </template></el-table-column
+      >
+      <el-table-column label="操作" fixed="right" align="center" width="110">
+        <template slot-scope="scope">
+          <div class="flex-cb" style="justify-content: space-evenly">
+            <el-popconfirm
+              title="确定删除吗？"
+              @confirm="handleRemove(scope.row)"
             >
-          </el-form-item>
-        </el-form>
-      </div>
-    </el-dialog>
-    <List ref="listRef" />
-    <Add ref="addRef" />
+              <el-button type="text" size="mini" slot="reference">
+                删除
+              </el-button>
+            </el-popconfirm>
+
+            <el-button
+              style="margin-left: 8px"
+              type="text"
+              size="mini"
+              @click="$refs.addRef.open(scope.row)"
+            >
+              编辑
+            </el-button>
+            <el-button
+              style="margin-left: 8px"
+              type="text"
+              size="mini"
+              @click="handleCopy(scope.row)"
+            >
+              复用
+            </el-button>
+          </div>
+        </template>
+      </el-table-column>
+    </el-table>
+    <div class="flex">
+      <div class="flex1"></div>
+      <el-pagination
+        style="margin-top: 12px"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="page"
+        :page-sizes="[5, 10, 20, 50, 100]"
+        :page-size="page_num"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="total"
+      >
+      </el-pagination>
+    </div>
+
+    <Add ref="addRef" @confirm="getTableData" />
   </div>
 </template>
 
@@ -36,79 +108,100 @@ import {
   keywordAdd,
   keywordCheck,
 } from "@/api/keyword";
-import List from "./List";
 import Add from "./Add";
+import dayjs from "dayjs";
 
 export default {
-  components: { List, Add },
+  components: { Add },
   data() {
     return {
-      show: false,
       keyword: "",
-      passwd: "",
+      tableData: [],
+      page_num: 10,
+      page: 1,
+      total: 0,
+      multipleSelection: [],
     };
   },
-  computed: {},
-  created() {},
+  computed: {
+    getTime() {
+      return (num) => (num ? dayjs(num).format("YYYY-MM-DD, HH:mm") : "-/-");
+    },
+  },
+  created() {
+    this.getTableData();
+  },
   mounted() {},
   methods: {
-    async open({ keyword }) {
-      const has_passwd = await this.checkHasPassword();
-      if (!has_passwd) {
-        this.$message.warning("无权限~");
-        return;
-      }
-      this.passwd = "";
-      this.keyword = keyword;
-      this.show = true;
-    },
-    close() {
-      this.show = false;
-    },
-    async checkHasPassword() {
-      const { code, has_passwd } = await keywordHasPasswd();
-      if (code == 200) {
-        return has_passwd;
-      } else {
-        this.$message.error("请求出错~");
-      }
-    },
     // 校验密码
-    async handleSubmit() {
-      const { code, result } = await validPasswd({ passwd: this.passwd });
+    async handleSubmit() {},
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+      this.page_num = val;
+      this.getTableData();
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      this.page = val;
+      this.getTableData();
+    },
+    async handleCopy(row) {
+      const { code } = await keywordAdd({
+        keyword: this.keyword,
+        content: row.content,
+        remark: row.remark,
+      });
       if (code == 200) {
-        // 检查关键词是否已经加入了
-        // {"code":200,"exist":true,"result":"ok"}
-        const { code, exist } = await keywordCheck({ keyword: this.keyword });
-        if (code == 200) {
-          this.close();
-          if (exist) {
-            this.$refs.listRef.open(this.keyword);
-          } else {
-            this.$confirm("请选择具体业务", "提示", {
-              confirmButtonText: "复用",
-              cancelButtonText: "新增",
-              type: "warning",
-            })
-              .then(() => {
-                // 复用
-                this.$refs.listRef.open(this.keyword, "复用");
-              })
-              .catch(() => {
-                // 新增
-                this.$refs.addRef.open({keyword:this.keyword});
-              });
-          }
-        } else {
-          this.$message.error("关键词重复检验出错~");
-        }
+        this.$message.success("复用成功");
+        this.getTableData();
       } else {
-        this.$message.error(result || "校验密码出错~");
+        this.$message.error("复用失败");
       }
+    },
+    async handleRemove(row) {
+      const { code } = await keywordDel({ ids: [row.id] });
+      if (code == 200) {
+        this.$message.success("删除成功");
+        this.getTableData();
+      } else {
+        this.$message.error("删除失败");
+      }
+    },
+    async batchRemove() {
+      const { code } = await keywordDel({
+        ids: this.multipleSelection.map((i) => i.id),
+      });
+      if (code == 200) {
+        this.$message.success("批量删除成功");
+        this.getTableData();
+      } else {
+        this.$message.error("批量删除失败");
+      }
+    },
+
+    // 获取列表
+    async getTableData() {
+      const params = {
+        page: this.page,
+        page_num: this.page_num,
+      };
+      console.log(1298, this.keyword);
+      if (this.keyword) {
+        params.keyword = this.keyword;
+      }
+      const { data = [], total } = await keywordList(params);
+      this.tableData = data;
+      this.total = total;
     },
   },
 };
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
-/* @import url(); 引入css类 */
+.public-page {
+  display: flex;
+  flex-direction: column;
+  .table {
+    flex: 1;
+  }
+}
 </style>
