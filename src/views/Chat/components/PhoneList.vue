@@ -1,24 +1,25 @@
 <template>
   <div class="phone-list-component">
-    <div class="flex-cc">
-      <el-radio-group v-model="already_reply" @input="getList">
-        <el-radio :label="true">已回复</el-radio>
-        <el-radio :label="false">未回复</el-radio>
-      </el-radio-group>
-    </div>
     <el-input
       size="small"
       v-model.trim="phone"
-      placeholder="请输入电话号码"
-      style="margin: 12px 0"
+      placeholder="请输入电话号码后按enter键"
+      style="margin: 0 0 12px 0"
       @keyup.enter.native="getList"
     ></el-input>
     <el-input
       size="small"
       v-model.trim="filename"
-      placeholder="请输入文件名称"
+      placeholder="请输入文件名称后按enter键"
       @keyup.enter.native="getList"
     ></el-input>
+    <div class="flex-cb" style="margin-top: 12px;">
+      <el-radio-group v-model="already_reply" @input="getList">
+        <el-radio :label="true">已回复</el-radio>
+        <el-radio :label="false">未回复</el-radio>
+      </el-radio-group>
+      <el-button size="small" @click="getList">查询</el-button>
+    </div>
     <el-table :data="tableData" class="table" @row-click="handleClickRow">
       <el-table-column prop="phone" label="手机号" />
       <el-table-column prop="filename" label="文件名" />
