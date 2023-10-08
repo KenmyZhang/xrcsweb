@@ -38,6 +38,9 @@
       <el-form-item>
         <el-button type="primary" @click="getList">查询</el-button>
       </el-form-item>
+      <el-form-item>
+        <el-button @click="$refs.modifyRef.open({})">新建</el-button>
+      </el-form-item>
     </el-form>
     <el-table :data="tableData" class="table">
       <el-table-column prop="id" label="ID" width="55" />
@@ -88,14 +91,18 @@
       layout="total, prev, pager, next"
       :total="total"
     />
+    <modify ref="modifyRef" @conform="getList" />
   </div>
 </template>
 
 <script>
 import { filterTasks, phoneUploadhistory } from "@/api";
 import dayjs from "dayjs";
+import Modify from "./Modify.vue";
 
 export default {
+  components: { Modify },
+
   data() {
     return {
       page: 1,

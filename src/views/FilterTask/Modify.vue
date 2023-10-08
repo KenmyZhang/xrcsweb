@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import { phoneTask, phoneUploadhistory } from "@/api";
+import { addFilterTasks, phoneUploadhistory } from "@/api";
 import SelectReplyId from "@/components/SelectReplyId";
 
 export default {
@@ -149,7 +149,7 @@ export default {
      * 新增
      */
     async handleAdd() {
-      const { code } = await phoneTask({
+      const { code } = await addFilterTasks({
         ...this.form,
         reply_id: Number(this.form.reply_id),
       });

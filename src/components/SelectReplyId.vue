@@ -61,7 +61,8 @@ export default {
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
 /* @import url(); 引入css类 */
-.table {
-  max-height: 60vh;
+.w-table {
+  // max-height: 60vh;
+  // overflow-y: scroll;
 }
 </style>

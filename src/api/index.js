@@ -64,6 +64,14 @@ export function filterTasks(data) {
     params: data,
   })
 }
+// 新建筛选任务
+export function addFilterTasks(data) {
+  return request({
+    url: `/api/v3/filter/task`,
+    method: 'post',
+    data,
+  })
+}
 // 发送消息
 // receiver： 接收人
 // content ： 发送内容
