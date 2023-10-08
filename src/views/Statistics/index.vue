@@ -1,7 +1,7 @@
 <template>
   <div class="public-page">
     <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane label="小时分钟" name="hour">
+      <el-tab-pane label="分钟" name="min">
         <div>
           <div class="flex-cb w100">
             <el-date-picker
@@ -11,26 +11,41 @@
               :clearable="false"
               placeholder="选择日期"
               value-format="yyyy-MM-dd"
-              @change="drawHm"
+              @change="getMin"
             />
-            <div>
-              <el-button size="small" @click="onExport('mins')"
-                >导出分钟</el-button
-              >
-              <el-button size="small" @click="onExport('hours')"
-                >导出小时</el-button
-              >
-            </div>
+            <el-button size="small" @click="onExport('mins')"
+              >导出分钟</el-button
+            >
           </div>
           <div class="flex-cb w100" style="padding-top: 36px">
             <div
               id="min"
-              style="width: 48%; height: 600px"
+              style="width: 100%; height: 600px"
               v-loading="minloading"
             ></div>
+          </div>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane label="小时" name="hour">
+        <div>
+          <div class="flex-cb w100">
+            <el-date-picker
+              v-model="time"
+              type="date"
+              size="small"
+              :clearable="false"
+              placeholder="选择日期"
+              value-format="yyyy-MM-dd"
+              @change="getHour"
+            />
+            <el-button size="small" @click="onExport('hours')"
+              >导出小时</el-button
+            >
+          </div>
+          <div class="flex-cb w100" style="padding-top: 36px">
             <div
               id="hour"
-              style="width: 48%; height: 600px"
+              style="width: 100%; height: 600px"
               v-loading="hourloading"
             ></div>
           </div>
@@ -70,7 +85,7 @@ export default {
   components: {},
   data() {
     return {
-      activeName: "hour",
+      activeName: "min",
       time: "",
       minloading: false,
       hourloading: false,
@@ -91,7 +106,7 @@ export default {
     console.log(this.time, this.timeRange);
   },
   mounted() {
-    this.drawHm();
+    this.getMin();
   },
   methods: {
     getDownLoadList(row) {
@@ -123,9 +138,12 @@ export default {
       exportExcel(dataArr, "数据统计", titleArr, "数据统计");
     },
     handleClick(tab, event) {
-      console.log(this.activeName);
       this.$nextTick(() => {
-        if (this.days.length === 0) {
+        if (this.activeName == "min") {
+          this.getMin();
+        } else if (this.activeName == "hour") {
+          this.getHour();
+        } else {
           this.getDay();
         }
       });
@@ -328,10 +346,6 @@ export default {
       let str = num + "";
       if (str.length == 1) str = "0" + str;
       return str;
-    },
-    drawHm() {
-      this.getMin();
-      this.getHour();
     },
     async getMin() {
       this.minloading = true;

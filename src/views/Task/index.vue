@@ -16,7 +16,20 @@
     </el-form>
     <el-table :data="tableData" class="table">
       <el-table-column prop="id" label="ID" width="55" />
-      <el-table-column prop="account" label="账户" />
+      <el-table-column prop="app_key" label="秘钥" width="160px">
+        <template slot-scope="scope">
+          <div
+            class="flex-cb"
+            style="flex-wrap: no-wrap"
+            v-if="scope.row.app_key"
+          >
+            {{ scope.row.app_key }}
+            <el-button size="mini" @click="onCopy(scope.row.app_key)"
+              >复制</el-button
+            >
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column prop="filename" label="文件名" />
       <el-table-column prop="reply_id" label="回复规则id" />
       <el-table-column prop="reply_content" label="回复内容" />
@@ -29,8 +42,12 @@
             v-if="scope.row.status === null || scope.row.status === undefined"
             >未知</el-tag
           >
-          <el-tag type="info" v-if="scope.row.status == 0" size="small">未启动</el-tag>
-          <el-tag type="success" v-if="scope.row.status == 1" size="small">已启动</el-tag>
+          <el-tag type="info" v-if="scope.row.status == 0" size="small"
+            >未启动</el-tag
+          >
+          <el-tag type="success" v-if="scope.row.status == 1" size="small"
+            >已启动</el-tag
+          >
         </template>
       </el-table-column>
       <el-table-column prop="handle_status" label="处理状态">
@@ -111,6 +128,24 @@ export default {
     handleCurrentChange(page) {
       this.page = page;
       this.getList();
+    },
+    onCopy(text) {
+      console.log(text);
+      //创建input标签
+      var input = document.createElement("input");
+      //将input的值设置为需要复制的内容
+      input.value = text;
+      //添加input标签
+      document.body.appendChild(input);
+      //选中input标签
+      input.select();
+      //执行复制
+      document.execCommand("copy");
+      //成功提示信息
+      this.$message.success("success!");
+      //移除input标签
+      document.body.removeChild(input);
+      this.$message.success('复制成功')
     },
     async startTask(row) {
       const { code } = await phoneTaskStart({ id: row.id });

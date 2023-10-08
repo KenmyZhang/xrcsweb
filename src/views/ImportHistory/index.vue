@@ -21,6 +21,11 @@
           {{ getTime(scope.row.upload_time) }}
         </template>
       </el-table-column>
+      <el-table-column label="操作" width="50" align="center" fixed="right">
+        <template slot-scope="scope">
+          <el-button type="text" @click="uploadTxt(scope.row)">下载</el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <el-pagination
       class="tr"
@@ -39,6 +44,7 @@
 <script>
 import { phoneUploadhistory } from "@/api";
 import dayjs from "dayjs";
+import { downloadUrlFile } from "./utils";
 
 export default {
   data() {
@@ -64,8 +70,21 @@ export default {
   },
   mounted() {},
   methods: {
+    uploadTxt(row) {
+      // window.location.href = row.filepath
+      // window.open(row.filepath, "_blank");
+
+      // const a = document.createElement("a");
+      // a.style.display = "none";
+      // a.download = "xx";
+      // a.href = row.filepath;
+      // document.body.appendChild(a);
+      // a.click();
+      // document.body.removeChild(a);
+      downloadUrlFile(row.filepath, row.filename)
+    },
     handleSizeChange(page_num) {
-      this.page_num = page_num
+      this.page_num = page_num;
       this.getList();
     },
     handleCurrentChange(page) {
@@ -127,11 +146,11 @@ export default {
 };
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
-.public-page {
-  display: flex;
-  flex-direction: column;
-  .table {
-    flex: 1;
-  }
-}
+// .public-page {
+//   display: flex;
+//   flex-direction: column;
+//   .table {
+//     flex: 1;
+//   }
+// }
 </style>
