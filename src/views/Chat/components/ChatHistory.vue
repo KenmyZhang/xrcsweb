@@ -65,12 +65,14 @@ export default {
   methods: {
     async getList(row, needInit) {
       this.row = row;
-      if (this.list.length > this.total) return;
-
       if (needInit) {
         this.page = 1;
         this.list = [];
+        this.total = 0
       }
+
+      if (this.list.length >= this.total && this.total > 0) return;
+
       const { data = [], total } = await msgList({
         phone: this.row.phone,
         page: this.page,
