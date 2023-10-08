@@ -68,6 +68,14 @@ export const nomorlRoutes = {
       }
     },
     {
+      path: "statistics",
+      component: () => import("../views/Statistics/index.vue"),
+      meta: {
+        title: '统计',
+        icon: 'chat'
+      }
+    },
+    {
       path: "/",
       redirect: xxx => {
         const userInfo = sessionStorage.getItem('userInfo')

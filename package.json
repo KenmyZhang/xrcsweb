@@ -24,6 +24,7 @@
     "@riophae/vue-treeselect": "0.1.0",
     "axios": "0.18.1",
     "dayjs": "^1.11.7",
+    "echarts": "^5.4.3",
     "element-ui": "^2.12.0",
     "infinite-loading": "^0.2.8",
     "normalize.css": "7.0.0",
