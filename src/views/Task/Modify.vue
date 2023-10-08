@@ -9,10 +9,22 @@
       <div style="padding: 0 36px 0 0">
         <el-form ref="form" :model="form" label-width="100px" :rules="rules">
           <el-form-item label="文件名" prop="filename">
-            <el-input v-model="form.filename" placeholder="请输入"></el-input>
+            <el-select
+              class="w100"
+              v-model="form.filename"
+              placeholder="请选择文件名"
+              clearable
+            >
+              <el-option
+                :label="item"
+                :value="item"
+                v-for="item in taskList"
+                :key="item"
+              ></el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="打招呼id" prop="reply_id">
-            <div @click="$refs.selectReplyIdRef.open()" >
+            <div @click="$refs.selectReplyIdRef.open()">
               <div v-if="row.id" class="pointer">{{ row.id }}</div>
               <el-button v-else size="small">请选择</el-button>
             </div>
@@ -49,7 +61,7 @@
 </template>
 
 <script>
-import { phoneTask } from "@/api";
+import { phoneTask, phoneUploadhistory } from "@/api";
 import SelectReplyId from "./SelectReplyId";
 
 export default {
@@ -57,6 +69,7 @@ export default {
   data() {
     return {
       row: {},
+      taskList: [],
       rules: {
         filename: [{ required: true, message: "请输入", trigger: "blur" }],
         reply_id: [{ required: true, message: "请输入", trigger: "blur" }],
@@ -75,9 +88,25 @@ export default {
   computed: {},
   created() {
     this.initForm();
+    this.getTaskList();
   },
   mounted() {},
   methods: {
+    async getTaskList() {
+      const { data = [] } = await phoneUploadhistory({
+        page: 1,
+        page_num: 1000000,
+      });
+      // this.taskList = data || [];
+      const taskList = [];
+      data.forEach((v) => {
+        if (!taskList.includes(v.filename)) {
+          taskList.push(v.filename);
+        }
+      });
+      this.taskList = taskList;
+    },
+
     /**
      * 初始化form
      */
@@ -92,7 +121,7 @@ export default {
     open(form) {
       this.initForm();
       this.show = true;
-      this.row = {}
+      this.row = {};
       this.form = { ...this.form, ...form };
     },
     close() {

@@ -5,7 +5,20 @@
         <el-input v-model="formValues.account" placeholder="请输入"></el-input>
       </el-form-item>
       <el-form-item label="文件名" prop="filename">
-        <el-input v-model="formValues.filename" placeholder="请输入"></el-input>
+        <!-- <el-input v-model="formValues.filename" placeholder="请输入"></el-input> -->
+        <el-select
+          class="w100"
+          v-model="formValues.filename"
+          placeholder="请选择文件名"
+          clearable
+        >
+          <el-option
+            :label="item"
+            :value="item"
+            v-for="item in taskList"
+            :key="item"
+          ></el-option>
+        </el-select>
       </el-form-item>
       <el-form-item label="状态">
         <el-select v-model="formValues.status" placeholder="活动区域" clearable>
@@ -79,7 +92,7 @@
 </template>
 
 <script>
-import { filterTasks } from "@/api";
+import { filterTasks, phoneUploadhistory } from "@/api";
 import dayjs from "dayjs";
 
 export default {
@@ -88,6 +101,7 @@ export default {
       page: 1,
       page_num: 10,
       total: 0,
+      taskList: [],
       formValues: {
         account: "",
         filename: "",
@@ -106,9 +120,24 @@ export default {
   },
   created() {
     this.getList();
+    this.getTaskList();
   },
   mounted() {},
   methods: {
+    async getTaskList() {
+      const { data = [] } = await phoneUploadhistory({
+        page: 1,
+        page_num: 1000000,
+      });
+      // this.taskList = data || [];
+      const taskList = [];
+      data.forEach((v) => {
+        if (!taskList.includes(v.filename)) {
+          taskList.push(v.filename);
+        }
+      });
+      this.taskList = taskList;
+    },
     handleAdd() {
       this.$refs.modifyRef.open({});
     },

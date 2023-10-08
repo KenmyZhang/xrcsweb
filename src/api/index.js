@@ -85,3 +85,32 @@ export function msgList(data) {
     params: data,
   })
 }
+
+
+
+// 分钟统计
+export function minuteList(data) {
+  return request({
+    url: `/api/v3/minute/statistic`,
+    method: 'get',
+    params: data,
+  })
+}
+
+// 小时统计
+export function hourList(data) {
+  return request({
+    url: `/api/v3/hour/statistic`,
+    method: 'get',
+    params: data,
+  })
+}
+
+// 日统计
+export function dayList(data) {
+  return request({
+    url: `/api/v3/yearday/statistic`,
+    method: 'get',
+    params: data,
+  })
+}
