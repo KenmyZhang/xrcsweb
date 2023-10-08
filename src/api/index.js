@@ -122,3 +122,28 @@ export function dayList(data) {
     params: data,
   })
 }
+// 设备账号
+export function deviceAccounts(data) {
+  return request({
+    url: `/api/v3/device/accounts`,
+    method: 'get',
+    params: data,
+  })
+}
+// 使用设备账号
+export function useDeviceAccount(data) {
+  return request({
+    url: `/api/v3/device/account/status`,
+    method: 'post',
+    data,
+  })
+}
+
+// 新建设备账号
+export function addDeviceAccount(data) {
+  return request({
+    url: `/api/v3/device/account`,
+    method: 'post',
+    data,
+  })
+}

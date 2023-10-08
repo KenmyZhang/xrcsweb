@@ -76,6 +76,14 @@ export const nomorlRoutes = {
       }
     },
     {
+      path: "deviceAccount",
+      component: () => import("../views/DeviceAccount/index.vue"),
+      meta: {
+        title: '设备账号',
+        icon: 'chat'
+      }
+    },
+    {
       path: "/",
       redirect: xxx => {
         const userInfo = sessionStorage.getItem('userInfo')
