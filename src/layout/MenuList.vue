@@ -14,7 +14,7 @@
         >
           {{ totalUnReadMsg }}
         </div>
-        <icons :icon="item.meta.icon" />
+        <icons :icon="item.path" />
       </div>
       {{ item.meta.title }}
     </div>
