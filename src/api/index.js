@@ -147,3 +147,14 @@ export function addDeviceAccount(data) {
     data,
   })
 }
+
+
+// 获取电话号码
+// http://43.139.163.35:6688/api/v3/phone/list?filename=phone.txt&page=1&page_num=10
+export function getphones(data) {
+  return request({
+    url: `/api/v3/phone/list`,
+    method: 'get',
+    params: data,
+  })
+}

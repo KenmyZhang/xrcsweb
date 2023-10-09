@@ -13,10 +13,11 @@
       placeholder="请输入文件名称后按enter键"
       @keyup.enter.native="getList"
     ></el-input>
-    <div class="flex-cb" style="margin-top: 12px;">
+    <div class="flex-cb" style="margin-top: 12px">
       <el-radio-group v-model="already_reply" @input="getList">
         <el-radio :label="true">已回复</el-radio>
         <el-radio :label="false">未回复</el-radio>
+        <el-radio :label="10">已成交</el-radio>
       </el-radio-group>
       <el-button size="small" @click="getList">查询</el-button>
     </div>
@@ -79,13 +80,19 @@ export default {
       this.getList();
     },
     async getList() {
-      const { data = [], total } = await phoneList({
-        already_reply: this.already_reply,
+      const params = {
         phone: this.phone,
         filename: this.filename,
         page: this.page,
         page_num: this.page_num,
-      });
+      };
+      if (this.already_reply === 10) {
+        params.trade_status = true;
+      } else {
+        params.already_reply = this.already_reply;
+      }
+
+      const { data = [], total } = await phoneList(params);
       this.tableData = data;
       console.log(12, this.tableData);
       this.total = total;
@@ -103,7 +110,7 @@ export default {
   flex-direction: column;
   height: 100%;
   box-sizing: border-box;
-  .table{
+  .table {
     flex: 1;
   }
 }

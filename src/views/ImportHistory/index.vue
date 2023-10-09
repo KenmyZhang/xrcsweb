@@ -21,8 +21,9 @@
           {{ getTime(scope.row.upload_time) }}
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="50" align="center" fixed="right">
+      <el-table-column label="操作" width="140" align="center" fixed="right">
         <template slot-scope="scope">
+          <el-button type="text" @click="checkPhone(scope.row)">查看号码</el-button>
           <el-button type="text" @click="uploadTxt(scope.row)">下载</el-button>
         </template>
       </el-table-column>
@@ -38,6 +39,7 @@
       layout="total, prev, pager, next"
       :total="total"
     />
+    <ShowPhone ref="showPhoneRef"/>
   </div>
 </template>
 
@@ -45,8 +47,10 @@
 import { phoneUploadhistory } from "@/api";
 import dayjs from "dayjs";
 import { downloadUrlFile } from "./utils";
+import ShowPhone from './ShowPhone'
 
 export default {
+  components:{ShowPhone},
   data() {
     return {
       page: 1,
@@ -90,6 +94,9 @@ export default {
     handleCurrentChange(page) {
       this.page = page;
       this.getList();
+    },
+    checkPhone(row){
+      this.$refs.showPhoneRef.open(row)
     },
     /**
      * 表格数据获取
