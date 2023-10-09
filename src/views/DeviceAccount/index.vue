@@ -1,10 +1,17 @@
 <template>
   <div class="public-page">
     <div class="flex-c" style="margin-bottom: 12px">
-      <!-- @click="$refs.update.open({})" -->
-      <el-button @click="onAdd" class="button" type="primary" size="small"
-        >新增</el-button
+      <el-select
+        v-model="status"
+        placeholder="请选择"
+        size="small"
+        style="margin-right: 12px"
       >
+        <el-option label="未使用" :value="0"></el-option>
+        <el-option label="已使用" :value="1"></el-option>
+      </el-select>
+      <el-button @click="getList" type="primary" size="small">查询</el-button>
+      <el-button @click="onAdd" size="small">新增</el-button>
     </div>
 
     <el-table :data="tableData" class="table" :loading="loading">
@@ -40,9 +47,9 @@
       @current-change="handleCurrentChange"
       class="tr"
       hide-on-single-page
-      :current-page.sync="page_num"
+      :current-page.sync="page"
       :page-sizes="[10, 20, 50, 100]"
-      :page-size="page"
+      :page-size="page_num"
       layout="sizes, prev, pager, next"
       :total="total"
     />
@@ -56,6 +63,7 @@ import dayjs from "dayjs";
 export default {
   data() {
     return {
+      status: 0,
       tableData: [],
       loading: false,
       page_num: 10,
@@ -84,6 +92,7 @@ export default {
       const { data = [], total } = await deviceAccounts({
         page: this.page,
         page_num: this.page_num,
+        status: this.status,
       });
       this.loading = false;
       this.tableData = data;
@@ -99,7 +108,7 @@ export default {
       }
     },
     onAdd() {
-      this.$prompt('请输入创建设备账号数量', "提示", {
+      this.$prompt("请输入创建设备账号数量", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         closeOnClickModal: false,
@@ -121,9 +130,7 @@ export default {
       }
     },
     async handleAdd(value) {
-      console.log(11, value);
       const isnum = this.isNumber(value);
-      console.log(112, isnum);
       if (isnum) {
         const { code } = await addDeviceAccount({ count: +value });
         if (code == 200) {

@@ -30,12 +30,19 @@
             </div>
           </el-form-item>
           <el-form-item label="打招呼内容" prop="reply_content">
-            <el-input
-              type="textarea"
-              :rows="4"
-              placeholder="请输入"
+            <el-select
+              class="w100"
               v-model="form.reply_content"
-            ></el-input>
+              placeholder="请选择"
+              clearable
+            >
+              <el-option
+                :label="item"
+                :value="item"
+                v-for="item in helloContentList"
+                :key="item"
+              ></el-option>
+            </el-select>
           </el-form-item>
 
           <el-form-item label="消息延迟" prop="interval">
@@ -63,6 +70,7 @@
 <script>
 import { phoneTask, phoneUploadhistory } from "@/api";
 import SelectReplyId from "@/components/SelectReplyId";
+import { get } from "@/api/sayHello";
 
 export default {
   components: { SelectReplyId },
@@ -70,6 +78,7 @@ export default {
     return {
       row: {},
       taskList: [],
+      helloContentList: [],
       rules: {
         filename: [{ required: true, message: "请输入", trigger: "blur" }],
         reply_id: [{ required: true, message: "请输入", trigger: "blur" }],
@@ -89,9 +98,20 @@ export default {
   created() {
     this.initForm();
     this.getTaskList();
+    this.getHellolist();
   },
   mounted() {},
   methods: {
+    async getHellolist() {
+      const { data = [] } = await get({
+        page: 1,
+        page_num: 1000000,
+        valid: true,
+      });
+      const arr = data.map(v=>v.content)
+      this.helloContentList = Array.from(new Set(arr));
+      console.log(87, this.helloContentList);
+    },
     async getTaskList() {
       const { data = [] } = await phoneUploadhistory({
         page: 1,
