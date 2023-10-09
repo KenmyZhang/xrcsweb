@@ -158,3 +158,20 @@ export function getphones(data) {
     params: data,
   })
 }
+
+// 任务成员
+export function taskmember(data) {
+  return request({
+    url: `/api/v3/task/member`,
+    method: 'get',
+    params: data,
+  })
+}
+// 任务中的电话
+export function taskphoneslist(data) {
+  return request({
+    url: `/api/v3/task/phones/list`,
+    method: 'get',
+    params: data,
+  })
+}

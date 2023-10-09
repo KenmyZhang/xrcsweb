@@ -67,8 +67,9 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" width="50" align="center" fixed="right">
+      <el-table-column label="操作" width="140" align="center" fixed="right">
         <template slot-scope="scope">
+          <el-button type="text" @click="$refs.showMemberRef.open(scope.row)">成员信息</el-button>
           <el-button type="text" @click="startTask(scope.row)">开启</el-button>
         </template>
       </el-table-column>
@@ -85,16 +86,18 @@
       :total="total"
     />
     <modify ref="modifyRef" @conform="getList" />
+    <ShowMember ref="showMemberRef" @conform="getList" />
   </div>
 </template>
 
 <script>
 import Modify from "./Modify.vue";
+import ShowMember from "./ShowMember.vue";
 import { phoneTaskStart, phoneTaskList } from "@/api";
 import dayjs from "dayjs";
 
 export default {
-  components: { Modify },
+  components: { Modify, ShowMember },
   data() {
     return {
       page: 1,
