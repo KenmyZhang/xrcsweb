@@ -23,24 +23,18 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="打招呼id" prop="reply_id">
-            <div @click="$refs.selectReplyIdRef.open()">
-              <div v-if="row.id" class="pointer">{{ row.id }}</div>
-              <el-button v-else size="small">请选择</el-button>
-            </div>
-          </el-form-item>
-          <el-form-item label="打招呼内容" prop="reply_content">
+          <el-form-item label="打招呼内容" prop="reply_id">
             <el-select
               class="w100"
-              v-model="form.reply_content"
+              v-model="form.reply_id"
               placeholder="请选择"
               clearable
             >
               <el-option
-                :label="item"
-                :value="item"
+                :label="item.content"
+                :value="item.id"
                 v-for="item in helloContentList"
-                :key="item"
+                :key="item.id"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -60,36 +54,28 @@
         </el-form>
       </div>
     </el-dialog>
-    <select-reply-id
-      ref="selectReplyIdRef"
-      @handleSelectReplyId="handleSelectReplyId"
-    />
   </div>
 </template>
 
 <script>
 import { phoneTask, phoneUploadhistory } from "@/api";
-import SelectReplyId from "@/components/SelectReplyId";
 import { get } from "@/api/sayHello";
 
 export default {
-  components: { SelectReplyId },
+  components: {  },
   data() {
     return {
-      row: {},
       taskList: [],
       helloContentList: [],
       rules: {
         filename: [{ required: true, message: "请输入", trigger: "blur" }],
         reply_id: [{ required: true, message: "请输入", trigger: "blur" }],
-        reply_content: [{ required: true, message: "请输入", trigger: "blur" }],
         interval: [{ required: true, message: "请输入", trigger: "blur" }],
       },
       show: false,
       form: {
         filename: "",
         reply_id: "",
-        reply_content: "",
         interval: 0,
       },
     };
@@ -108,8 +94,9 @@ export default {
         page_num: 1000000,
         valid: true,
       });
-      const arr = data.map(v=>v.content)
-      this.helloContentList = Array.from(new Set(arr));
+      // const arr = data.map(v=>v.content)
+      // this.helloContentList = Array.from(new Set(arr));
+      this.helloContentList = data
       console.log(87, this.helloContentList);
     },
     async getTaskList() {
@@ -134,14 +121,12 @@ export default {
       this.form = {
         filename: "",
         reply_id: null,
-        reply_content: "",
         interval: 0,
       };
     },
     open(form) {
       this.initForm();
       this.show = true;
-      this.row = {};
       this.form = { ...this.form, ...form };
     },
     close() {
@@ -159,19 +144,16 @@ export default {
         }
       });
     },
-    handleSelectReplyId(row) {
-      console.log(33, row);
-      this.row = row;
-      this.form.reply_id = row.id;
-    },
 
     /**
      * 新增
      */
     async handleAdd() {
+      const obj = this.helloContentList.find(v=>v.id == this.form.reply_id)
       const { code } = await phoneTask({
         ...this.form,
         reply_id: Number(this.form.reply_id),
+        reply_content: obj.content,
       });
       if (code == 200) {
         this.$message.success("新增成功");
