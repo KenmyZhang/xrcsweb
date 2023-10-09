@@ -70,7 +70,7 @@
       <el-table-column label="操作" width="140" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button type="text" @click="$refs.showMemberRef.open(scope.row)">成员信息</el-button>
-          <el-button type="text" @click="startTask(scope.row)">开启</el-button>
+          <el-button type="text" @click="startTask(scope.row)" v-if="scope.row.status == 0">开启</el-button>
         </template>
       </el-table-column>
     </el-table>

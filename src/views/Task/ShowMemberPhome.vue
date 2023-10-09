@@ -1,6 +1,11 @@
 <template>
   <div>
-    <el-dialog :visible.sync="show" width="70%" destroy-on-close>
+    <el-dialog
+      :visible.sync="show"
+      width="70%"
+      destroy-on-close
+      title="电话列表"
+    >
       <el-table :data="tableData" v-loading="loading">
         <el-table-column prop="phone" label="手机号" align="center" />
         <el-table-column prop="already_send" label="已发送" align="center">
@@ -8,7 +13,10 @@
             <el-tag type="info" v-if="scope.row.already_send == 0" size="small"
               >未发送</el-tag
             >
-            <el-tag type="success" v-if="scope.row.already_send == 1" size="small"
+            <el-tag
+              type="success"
+              v-if="scope.row.already_send == 1"
+              size="small"
               >已发送</el-tag
             >
           </template>

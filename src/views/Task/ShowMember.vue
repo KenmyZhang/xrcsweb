@@ -1,6 +1,11 @@
 <template>
   <div>
-    <el-dialog :visible.sync="show" width="90%" destroy-on-close>
+    <el-dialog
+      :visible.sync="show"
+      width="90%"
+      destroy-on-close
+      title="成员信息列表"
+    >
       <el-table :data="tableData" v-loading="loading">
         <el-table-column prop="id" label="ID" width="55" align="center" />
         <el-table-column prop="task_id" label="任务ID" align="center" />
