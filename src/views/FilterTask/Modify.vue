@@ -62,7 +62,7 @@ import { addFilterTasks, phoneUploadhistory } from "@/api";
 import { get } from "@/api/sayHello";
 
 export default {
-  components: {  },
+  components: {},
   data() {
     return {
       taskList: [],
@@ -83,8 +83,6 @@ export default {
   computed: {},
   created() {
     this.initForm();
-    this.getTaskList();
-    this.getHellolist();
   },
   mounted() {},
   methods: {
@@ -96,7 +94,7 @@ export default {
       });
       // const arr = data.map(v=>v.content)
       // this.helloContentList = Array.from(new Set(arr));
-      this.helloContentList = data
+      this.helloContentList = data;
       console.log(87, this.helloContentList);
     },
     async getTaskList() {
@@ -124,8 +122,10 @@ export default {
         interval: 0,
       };
     },
-    open(form) {
+    async open(form) {
       this.initForm();
+      await this.getTaskList();
+      await this.getHellolist();
       this.show = true;
       this.form = { ...this.form, ...form };
     },
@@ -149,7 +149,7 @@ export default {
      * 新增
      */
     async handleAdd() {
-      const obj = this.helloContentList.find(v=>v.id == this.form.reply_id)
+      const obj = this.helloContentList.find((v) => v.id == this.form.reply_id);
       const { code } = await addFilterTasks({
         ...this.form,
         reply_id: Number(this.form.reply_id),

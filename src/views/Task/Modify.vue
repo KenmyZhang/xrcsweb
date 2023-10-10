@@ -83,8 +83,6 @@ export default {
   computed: {},
   created() {
     this.initForm();
-    this.getTaskList();
-    this.getHellolist();
   },
   mounted() {},
   methods: {
@@ -124,8 +122,10 @@ export default {
         interval: 0,
       };
     },
-    open(form) {
+    async open(form) {
       this.initForm();
+      await this.getTaskList();
+      await this.getHellolist();
       this.show = true;
       this.form = { ...this.form, ...form };
     },
