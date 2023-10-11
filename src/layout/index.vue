@@ -15,8 +15,6 @@
 <script>
 import MenuList from "@/layout/MenuList";
 import Header from "@/layout/Header";
-import { getSocketStatus } from "@/assets/js/websocket.js";
-
 
 export default {
   components: { MenuList, Header },
@@ -25,27 +23,9 @@ export default {
   },
   computed: {},
   created() {},
-  mounted() {
-    window.addEventListener("online", this.onlineFun);
-    window.addEventListener("offline", this.offlineFun);
-  },
-  beforeDestroy() {
-    window.removeEventListener("online", this.onlineFun);
-    window.removeEventListener("offline", this.offlineFun);
-  },
-  methods: {
-    onlineFun() {
-      console.log("网络已连接");
-      const socketStatus = getSocketStatus();
-      const { path } = this.$route;
-      if (!socketStatus && ["/addressBook", "/chat"].includes(path)) {
-        window.location.reload();
-      }
-    },
-    offlineFun() {
-      console.log("网络已断开");
-    },
-  },
+  mounted() {},
+  beforeDestroy() {},
+  methods: {},
 };
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
