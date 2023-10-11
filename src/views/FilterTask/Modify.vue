@@ -11,17 +11,18 @@
           <el-form-item label="文件名" prop="filename">
             <el-select
               class="w100"
-              v-model="form.filename"
+              v-model="form.taskId"
               placeholder="请选择文件名"
               clearable
             >
               <el-option
-                :label="item"
-                :value="item"
+                :label="item.filename"
+                :value="item.id"
                 v-for="item in taskList"
-                :key="item"
+                :key="item.id"
               ></el-option>
             </el-select>
+            <div v-if="form.taskId">文件内总数量：{{ totalTasks }}条</div>
           </el-form-item>
           <el-form-item label="打招呼内容" prop="reply_id">
             <el-select
@@ -68,19 +69,25 @@ export default {
       taskList: [],
       helloContentList: [],
       rules: {
-        filename: [{ required: true, message: "请输入", trigger: "blur" }],
+        taskId: [{ required: true, message: "请输入", trigger: "blur" }],
         reply_id: [{ required: true, message: "请输入", trigger: "blur" }],
         interval: [{ required: true, message: "请输入", trigger: "blur" }],
       },
       show: false,
       form: {
-        filename: "",
+        taskId: "",
         reply_id: "",
         interval: 0,
       },
     };
   },
-  computed: {},
+  computed: {
+    totalTasks() {
+      if (!this.form.taskId) return;
+      const item = this.taskList.find((v) => v.id == this.form.taskId);
+      return item.total;
+    },
+  },
   created() {
     this.initForm();
   },
@@ -102,14 +109,14 @@ export default {
         page: 1,
         page_num: 1000000,
       });
-      // this.taskList = data || [];
-      const taskList = [];
-      data.forEach((v) => {
-        if (!taskList.includes(v.filename)) {
-          taskList.push(v.filename);
-        }
-      });
-      this.taskList = taskList;
+      this.taskList = data || [];
+      // const taskList = [];
+      // data.forEach((v) => {
+      //   if (!taskList.includes(v.filename)) {
+      //     taskList.push(v.filename);
+      //   }
+      // });
+      // this.taskList = taskList;
     },
 
     /**
@@ -117,7 +124,7 @@ export default {
      */
     initForm() {
       this.form = {
-        filename: "",
+        taskId: "",
         reply_id: null,
         interval: 0,
       };
@@ -150,11 +157,15 @@ export default {
      */
     async handleAdd() {
       const obj = this.helloContentList.find((v) => v.id == this.form.reply_id);
-      const { code } = await addFilterTasks({
-        ...this.form,
+      const task = this.taskList.find((v) => v.id == this.form.taskId);
+      const params = {
+        interval: this.form.interval,
+        filename: task.filename,
         reply_id: Number(this.form.reply_id),
         reply_content: obj.content,
-      });
+      };
+
+      const { code } = await addFilterTasks(params);
       if (code == 200) {
         this.$message.success("新增成功");
         this.$emit("conform");
