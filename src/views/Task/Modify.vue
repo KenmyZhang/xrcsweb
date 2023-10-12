@@ -24,11 +24,12 @@
             </el-select>
             <div v-if="form.taskId">文件内总数量：{{ totalTasks }}条</div>
           </el-form-item>
-          <el-form-item label="打招呼内容" prop="reply_id">
+          <el-form-item label="打招呼内容" prop="reply_ids">
             <el-select
               class="w100"
-              v-model="form.reply_id"
+              v-model="form.reply_ids"
               placeholder="请选择"
+              multiple
               clearable
             >
               <el-option
@@ -36,7 +37,11 @@
                 :value="item.id"
                 v-for="item in helloContentList"
                 :key="item.id"
-              ></el-option>
+              >
+                <audio controls v-if="item.type == 2" style="height: 32px">
+                  <source :src="item.content" />
+                </audio>
+              </el-option>
             </el-select>
           </el-form-item>
 
@@ -70,23 +75,19 @@ export default {
       helloContentList: [],
       rules: {
         taskId: [{ required: true, message: "请输入", trigger: "blur" }],
-        reply_id: [{ required: true, message: "请输入", trigger: "blur" }],
+        reply_ids: [{ required: true, message: "请输入", trigger: "blur" }],
         interval: [{ required: true, message: "请输入", trigger: "blur" }],
       },
       show: false,
-      form: {
-        taskId: "",
-        reply_id: "",
-        interval: 0,
-      },
+      form: {},
     };
   },
   computed: {
-    totalTasks(){
-      if(!this.form.taskId) return;
-      const item = this.taskList.find(v=>v.id == this.form.taskId)
-      return item.total
-    }
+    totalTasks() {
+      if (!this.form.taskId) return;
+      const item = this.taskList.find((v) => v.id == this.form.taskId);
+      return item.total;
+    },
   },
   created() {
     this.initForm();
@@ -125,7 +126,7 @@ export default {
     initForm() {
       this.form = {
         taskId: "",
-        reply_id: null,
+        reply_ids: [],
         interval: 0,
       };
     },
@@ -156,14 +157,14 @@ export default {
      * 新增
      */
     async handleAdd() {
-      const obj = this.helloContentList.find((v) => v.id == this.form.reply_id);
+      // const obj = this.helloContentList.find((v) => v.id == this.form.reply_ids);
       const task = this.taskList.find((v) => v.id == this.form.taskId);
 
       const params = {
         interval: this.form.interval,
         filename: task.filename,
-        reply_id: Number(this.form.reply_id),
-        reply_content: obj.content,
+        reply_ids: this.form.reply_ids.join(","),
+        // reply_content: obj.content,
       };
       const { code } = await phoneTask(params);
       if (code == 200) {

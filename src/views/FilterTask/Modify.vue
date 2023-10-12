@@ -24,11 +24,12 @@
             </el-select>
             <div v-if="form.taskId">文件内总数量：{{ totalTasks }}条</div>
           </el-form-item>
-          <el-form-item label="打招呼内容" prop="reply_id">
+          <el-form-item label="打招呼内容" prop="reply_ids">
             <el-select
               class="w100"
-              v-model="form.reply_id"
+              v-model="form.reply_ids"
               placeholder="请选择"
+              multiple
               clearable
             >
               <el-option
@@ -36,7 +37,11 @@
                 :value="item.id"
                 v-for="item in helloContentList"
                 :key="item.id"
-              ></el-option>
+              >
+                <audio controls v-if="item.type == 2" style="height: 32px">
+                  <source :src="item.content" />
+                </audio>
+              </el-option>
             </el-select>
           </el-form-item>
 
@@ -70,15 +75,11 @@ export default {
       helloContentList: [],
       rules: {
         taskId: [{ required: true, message: "请输入", trigger: "blur" }],
-        reply_id: [{ required: true, message: "请输入", trigger: "blur" }],
+        reply_ids: [{ required: true, message: "请输入", trigger: "blur" }],
         interval: [{ required: true, message: "请输入", trigger: "blur" }],
       },
       show: false,
-      form: {
-        taskId: "",
-        reply_id: "",
-        interval: 0,
-      },
+      form: {},
     };
   },
   computed: {
@@ -93,14 +94,22 @@ export default {
   },
   mounted() {},
   methods: {
+    /**
+     * 初始化form
+     */
+    initForm() {
+      this.form = {
+        taskId: "",
+        reply_ids: [],
+        interval: 0,
+      };
+    },
     async getHellolist() {
       const { data = [] } = await get({
         page: 1,
         page_num: 1000000,
         valid: true,
       });
-      // const arr = data.map(v=>v.content)
-      // this.helloContentList = Array.from(new Set(arr));
       this.helloContentList = data;
       console.log(87, this.helloContentList);
     },
@@ -110,25 +119,9 @@ export default {
         page_num: 1000000,
       });
       this.taskList = data || [];
-      // const taskList = [];
-      // data.forEach((v) => {
-      //   if (!taskList.includes(v.filename)) {
-      //     taskList.push(v.filename);
-      //   }
-      // });
-      // this.taskList = taskList;
+      console.log('this.taskList',  this.taskList);
     },
 
-    /**
-     * 初始化form
-     */
-    initForm() {
-      this.form = {
-        taskId: "",
-        reply_id: null,
-        interval: 0,
-      };
-    },
     async open(form) {
       this.initForm();
       await this.getTaskList();
@@ -156,13 +149,17 @@ export default {
      * 新增
      */
     async handleAdd() {
-      const obj = this.helloContentList.find((v) => v.id == this.form.reply_id);
+      // const arr = this.helloContentList.filter(v=>{
+      //   return this.form.reply_ids.some(id=> v.id == id)
+      // })
+      // const reply_contents = arr.map(v=>v.content).join(',')
+
       const task = this.taskList.find((v) => v.id == this.form.taskId);
+      console.log('this.form.taskId', this.form.taskId);
       const params = {
         interval: this.form.interval,
         filename: task.filename,
-        reply_id: Number(this.form.reply_id),
-        reply_content: obj.content,
+        reply_ids: this.form.reply_ids.join(','),
       };
 
       const { code } = await addFilterTasks(params);

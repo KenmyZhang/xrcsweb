@@ -306,7 +306,7 @@ export default {
         xAxis: {
           type: "category",
           boundaryGap: false,
-          data: this.hours.map((v) => v.date),
+          data: this.days.map((v) => v.date),
         },
         yAxis: {
           type: "value",
@@ -316,25 +316,25 @@ export default {
             name: "客服发送数",
             type: "line",
             stack: "Total",
-            data: this.hours.map((v) => v.kefu_msg_count),
+            data: this.days.map((v) => v.kefu_msg_count),
           },
           {
             name: "用户发送数",
             type: "line",
             stack: "Total",
-            data: this.hours.map((v) => v.user_msg_count),
+            data: this.days.map((v) => v.user_msg_count),
           },
           {
             name: "回复用户数",
             type: "line",
             stack: "Total",
-            data: this.hours.map((v) => v.reply_user_count),
+            data: this.days.map((v) => v.reply_user_count),
           },
           {
             name: "交易用户数",
             type: "line",
             stack: "Total",
-            data: this.hours.map((v) => v.trade_user_count),
+            data: this.days.map((v) => v.trade_user_count),
           },
         ],
       };

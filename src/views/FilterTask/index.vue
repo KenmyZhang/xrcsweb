@@ -42,6 +42,12 @@
         <el-button @click="$refs.modifyRef.open({})">新建</el-button>
       </el-form-item>
     </el-form>
+    <el-tabs v-model="handle_status" @tab-click="getList">
+      <el-tab-pane label="全部" name="-1"></el-tab-pane>
+      <el-tab-pane label="未发送" name="0"></el-tab-pane>
+      <el-tab-pane label="发送中" name="1"></el-tab-pane>
+      <el-tab-pane label="发送完成" name="2"></el-tab-pane>
+    </el-tabs>
     <el-table :data="tableData" class="table">
       <el-table-column prop="id" label="ID" width="55" />
       <el-table-column prop="account" label="账户" />
@@ -105,6 +111,7 @@ export default {
 
   data() {
     return {
+      handle_status: "-1",
       page: 1,
       page_num: 10,
       total: 0,
@@ -168,6 +175,7 @@ export default {
         filename: this.formValues.filename,
         account: this.formValues.account,
         created_time: this.formValues.created_time,
+        handle_status: this.handle_status,
       });
       this.loading = false;
       this.total = total;

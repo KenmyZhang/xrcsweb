@@ -1,12 +1,17 @@
 <template>
   <div class="cell-content">
     <div v-if="type == 0 || type == 1">{{ content }}</div>
-    <div v-if="type == 2" class="imgs">
+    <div v-if="type == 12" class="imgs">
       <img class="img" :src="item" alt="" v-for="item in getImgs" :key="item" />
     </div>
-    <div v-if="type == 4 || type == 5" class="imgs">
+    <div v-if="type == 2" class="imgs">
+      <audio controls v-for="item in getImgs" :key="item" style="height: 36px">
+        <source :src="item" />
+      </audio>
+    </div>
+    <div v-if="type == 4" class="imgs">
       <video
-        style="height: 80px; width: 160px;"
+        style="height: 40px; width: 160px"
         controls
         v-for="item in getImgs"
         :key="item"

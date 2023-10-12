@@ -14,6 +14,12 @@
         <el-button @click="handleAdd">新建</el-button>
       </el-form-item>
     </el-form>
+    <el-tabs v-model="handle_status" @tab-click="handleClick">
+      <el-tab-pane label="全部" name="-1"></el-tab-pane>
+      <el-tab-pane label="未发送" name="0"></el-tab-pane>
+      <el-tab-pane label="发送中" name="1"></el-tab-pane>
+      <el-tab-pane label="发送完成" name="2"></el-tab-pane>
+    </el-tabs>
     <el-table :data="tableData" class="table">
       <el-table-column prop="id" label="ID" width="55" />
       <el-table-column prop="app_key" label="秘钥" width="160px">
@@ -69,8 +75,15 @@
 
       <el-table-column label="操作" width="140" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-button type="text" @click="$refs.showMemberRef.open(scope.row)">成员信息</el-button>
-          <el-button type="text" @click="startTask(scope.row)" v-if="scope.row.status == 0">开启</el-button>
+          <el-button type="text" @click="$refs.showMemberRef.open(scope.row)"
+            >成员信息</el-button
+          >
+          <el-button
+            type="text"
+            @click="startTask(scope.row)"
+            v-if="scope.row.status == 0"
+            >开启</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
@@ -100,6 +113,7 @@ export default {
   components: { Modify, ShowMember },
   data() {
     return {
+      handle_status: "-1",
       page: 1,
       page_num: 10,
       total: 0,
@@ -121,6 +135,9 @@ export default {
   },
   mounted() {},
   methods: {
+    handleClick(tab, event) {
+      this.getList();
+    },
     handleAdd() {
       this.$refs.modifyRef.open({});
     },
@@ -148,7 +165,7 @@ export default {
       this.$message.success("success!");
       //移除input标签
       document.body.removeChild(input);
-      this.$message.success('复制成功')
+      this.$message.success("复制成功");
     },
     async startTask(row) {
       const { code } = await phoneTaskStart({ id: row.id });
@@ -168,6 +185,7 @@ export default {
         page: this.page,
         page_num: this.page_num,
         status: this.formValues.status,
+        handle_status: this.handle_status,
       });
       this.loading = false;
       this.total = total;

@@ -33,6 +33,11 @@
       <el-table-column type="selection" width="55"> </el-table-column>
       <el-table-column prop="id" label="ID" width="55" />
       <el-table-column prop="city" label="城市" width="200" />
+      <!-- <el-table-column prop="type" label="类型">
+        <template slot-scope="scope">
+          {{ ["文字", "文字", "音频"][scope.row.type] }}
+        </template>
+      </el-table-column> -->
       <el-table-column prop="content" label="内容" width="200">
         <template slot-scope="scope">
           <ContentBox :content="scope.row.content" :type="scope.row.type" />
@@ -52,11 +57,7 @@
         </template>
       </el-table-column>
       <!-- <el-table-column prop="is_del" label="is_del" /> -->
-      <!-- <el-table-column prop="type" label="类型">
-        <template slot-scope="scope">
-          {{ ["文字", "文字", "图片", "", "视频", "语音"][scope.row.type] }}
-        </template>
-      </el-table-column> -->
+
       <el-table-column prop="created_time" label="创建日期">
         <template slot-scope="scope">
           {{ getTime(scope.row.created_time) }}
