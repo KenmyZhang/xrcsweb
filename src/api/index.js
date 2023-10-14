@@ -11,6 +11,17 @@ export function phoneUploadhistory(data) {
   })
 }
 
+// 创建发送任务的文件列表
+export function phoneTaskFiles(data) {
+  return request({
+    url: `/api/v3/phone/task/files`,
+    // method: 'post',
+    // data,
+    method: 'get',
+    params: data,
+  })
+}
+
 // 上传电话记录
 export function phoneList(data) {
   return request({
@@ -32,6 +43,16 @@ export function phoneTask(data) {
     // params: data,
   })
 }
+
+export function delPhoneTask(data) {
+  return request({
+    url: `/api/v3/phone/task/del`,
+    method: 'post',
+    data,
+  })
+}
+
+
 
 // 任务列表
 export function phoneTaskList(data) {
@@ -62,6 +83,16 @@ export function filterTasks(data) {
     // data,
     method: 'get',
     params: data,
+  })
+}
+
+export function delFilterTask(data) {
+  return request({
+    url: `/api/v3/filter/task/del`,
+    // method: 'post',
+    // data,
+    method: 'post',
+    data,
   })
 }
 // 新建筛选任务
@@ -148,6 +179,8 @@ export function addDeviceAccount(data) {
   })
 }
 
+export const GetMemberList = params => request({ url: '/api/v3/filter/task/members', params })
+export const GetHi = params => request({ url: '/api/v3/phone/task/reply', params })
 
 // 获取电话号码
 // http://43.139.163.35:6688/api/v3/phone/list?filename=phone.txt&page=1&page_num=10

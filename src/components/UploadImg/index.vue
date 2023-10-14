@@ -48,7 +48,7 @@ export default {
   methods: {
     // 处理移除操作
     handleRemove(file, fileList) {
-      console.log("handleRemove", file, fileList);
+      // console.log("handleRemove", file, fileList);
       this.fileList = fileList
       this.formatImgsStr(fileList)
     },
@@ -90,7 +90,7 @@ export default {
     // 格式化数据
     formatImgsStr(fileList) {
       const imgStr = fileList.map((i) => i.raw.path).join(",");
-      console.log("imgStr", imgStr);
+      // console.log("imgStr", imgStr);
       this.$emit("input", imgStr);
     },
     // 图片上传前的判断
@@ -127,7 +127,7 @@ export default {
   },
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 /deep/.el-upload-list--picture-card .el-upload-list__item{
   width: 108px;
   height: 108px;

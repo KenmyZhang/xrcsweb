@@ -61,7 +61,7 @@ export default {
   },
 };
 </script>
-<style rel="stylesheet/scss" lang="scss">
+<style lang="stylus">
 .menu-list {
   height: 100%;
   background: #fff;

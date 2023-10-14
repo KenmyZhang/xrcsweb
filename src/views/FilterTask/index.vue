@@ -4,26 +4,21 @@
       <el-form-item label="任务领取账号" prop="account">
         <el-input v-model="formValues.account" placeholder="请输入"></el-input>
       </el-form-item>
-      <el-form-item label="文件名" prop="filename">
-        <!-- <el-input v-model="formValues.filename" placeholder="请输入"></el-input> -->
-        <el-select
-          class="w100"
-          v-model="formValues.filename"
-          placeholder="请选择文件名"
-          clearable
-        >
-          <el-option
-            :label="item"
-            :value="item"
-            v-for="item in taskList"
-            :key="item"
-          ></el-option>
+      <el-form-item label="文件名" prop="account">
+        <el-input v-model="formValues.filename" placeholder="请输入"></el-input>
+      </el-form-item>
+      <el-form-item label="领取状态">
+        <el-select v-model="formValues.status" placeholder="领取状态" clearable>
+          <el-option label="全部" :value="-1"></el-option>
+          <el-option label="未领取" :value="0"></el-option>
+          <el-option label="已领取" :value="1"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="状态">
-        <el-select v-model="formValues.status" placeholder="活动区域" clearable>
-          <el-option label="未启动" :value="0"></el-option>
-          <el-option label="已启动" :value="1"></el-option>
+      <el-form-item label="筛选状态">
+        <el-select v-model="formValues.filter_status" placeholder="筛选状态" clearable>
+          <el-option label="全部" :value="-1"></el-option>
+          <el-option label="未完成" :value="0"></el-option>
+          <el-option label="已完成" :value="1"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="任务创建时间" prop="created_time">
@@ -42,47 +37,42 @@
         <el-button @click="$refs.modifyRef.open({})">新建</el-button>
       </el-form-item>
     </el-form>
-    <el-tabs v-model="handle_status" @tab-click="getList">
-      <el-tab-pane label="全部" name="-1"></el-tab-pane>
-      <el-tab-pane label="未发送" name="0"></el-tab-pane>
-      <el-tab-pane label="发送中" name="1"></el-tab-pane>
-      <el-tab-pane label="发送完成" name="2"></el-tab-pane>
-    </el-tabs>
     <el-table :data="tableData" class="table">
       <el-table-column prop="id" label="ID" width="55" />
-      <el-table-column prop="account" label="账户" />
+      <el-table-column prop="account" label="领取任务的账户" />
       <el-table-column prop="filename" label="文件名" />
-      <el-table-column prop="app_key" label="app_key" />
-      <el-table-column prop="status" label="状态">
+      <el-table-column prop="total" label="总共数量" />
+      <el-table-column prop="valid_count" label="有效数量" />
+      <el-table-column prop="invalid_count" label="无效数量" />
+      <el-table-column prop="un_process_count" label="未处理数量" />
+      <el-table-column label="领取进度">
         <template slot-scope="scope">
-          <el-tag
-            type="warning"
-            size="small"
-            v-if="scope.row.status === null || scope.row.status === undefined"
-            >未知</el-tag
-          >
-          <el-tag type="info" v-if="scope.row.status == 0" size="small"
-            >未启动</el-tag
-          >
-          <el-tag type="success" v-if="scope.row.status == 1" size="small"
-            >已启动</el-tag
-          >
+          {{ ((scope.row.assigned_count / scope.row.total)* 100).toFixed(2) }}%
         </template>
       </el-table-column>
-      <el-table-column prop="handle_status" label="处理状态">
+      <el-table-column label="筛选进度">
         <template slot-scope="scope">
-          {{
-            scope.row.handle_status === null ||
-            scope.row.handle_status === undefined
-              ? "未知"
-              : ["未处理", "处理中", "处理完成"][scope.row.handle_status]
-          }}
+          {{ ((scope.row.process_count / scope.row.total)* 100).toFixed(2) }}%
         </template>
       </el-table-column>
-
       <el-table-column prop="created_time" label="创建日期" width="180px">
         <template slot-scope="scope">
           {{ getTime(scope.row.created_time) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" fixed="right" align="center" width="100">
+        <template slot-scope="scope">
+          <el-button size='mini' type='text' @click='ShowMember(scope.row)'>任务成员</el-button>
+          <div class="flex-cb" style="justify-content: space-evenly">
+            <el-popconfirm
+              title="确定删除吗？"
+              @confirm="handleRemove(scope.row)"
+            >
+              <el-button type="text" size="mini" slot="reference">
+                删除
+              </el-button>
+            </el-popconfirm>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -98,17 +88,26 @@
       :total="total"
     />
     <modify ref="modifyRef" @conform="getList" />
+    <el-dialog title='任务成员' width='70%' :visible.sync='show_member'>
+      <el-table class='table' :data='member_list' v-loading='loading_member'>
+        <el-table-column label='账号' prop='account' />
+        <el-table-column label='任务总数' prop='total' />
+        <el-table-column label='有效数量' prop='valid_count' />
+        <el-table-column label='无效数量' prop='invalid_count' />
+        <el-table-column label='已处理数量' prop='process_count' />
+      </el-table>
+      <el-pagination class='tr' @size-change='ReLoadMember' @current-change='LoadMemberData' :current-page.sync='member_index' :page-sizes='[10, 20, 50]' :page-size='member_size' layout='total,sizes,prev,pager,next' :total='member_total' />
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { filterTasks, phoneUploadhistory } from "@/api";
+import { filterTasks, phoneUploadhistory,delFilterTask, GetMemberList } from "@/api";
 import dayjs from "dayjs";
 import Modify from "./Modify.vue";
 
 export default {
   components: { Modify },
-
   data() {
     return {
       handle_status: "-1",
@@ -119,10 +118,17 @@ export default {
       formValues: {
         account: "",
         filename: "",
-        status: "",
+        status: -1,
+        filter_status: -1,
         created_time: "",
       },
       tableData: [],
+      member_index: 1,
+      member_size: 10,
+      member_list: [],
+      member_total: 0,
+      show_member: false,
+      loading_member: false,
       loading: false,
       // multipleSelection: [],
     };
@@ -136,8 +142,30 @@ export default {
     this.getList();
     this.getTaskList();
   },
-  mounted() {},
   methods: {
+    ShowMember(item) {
+      this.member_index = 1
+      this.member_id = item.id
+      this.show_member = true
+      this.LoadMemberData()
+    },
+    ReLoadMember() {
+      this.member_index = 1
+      this.LoadMemberData()
+    },
+    LoadMemberData() {
+      this.loading_member = true
+      GetMemberList({
+        task_id: this.member_id,
+        page: this.member_index,
+        page_num: this.member_size
+      }).then(res => {
+        this.member_total = res.total || 0
+        this.member_list = res.data || []
+      }).finally(() => {
+        this.loading_member = false
+      })
+    },
     async getTaskList() {
       const { data = [] } = await phoneUploadhistory({
         page: 1,
@@ -172,6 +200,7 @@ export default {
         page: this.page,
         page_num: this.page_num,
         status: this.formValues.status,
+        filter_status: this.formValues.filter_status,
         filename: this.formValues.filename,
         account: this.formValues.account,
         created_time: this.formValues.created_time,
@@ -184,10 +213,18 @@ export default {
     /**
      * 单删除
      */
-    // async hanldeDel(row) {
-    //   const params = { ids: [row.id] };
-    //   this.delApi(params);
-    // },
+     async handleRemove(row) {
+       const { code } = await delFilterTask({
+         id: row.id,
+       })
+      if (code == 200) {
+        this.$message.success("删除成功");
+      } else {
+        this.$message.error("删除失败");
+      }
+       this.getList();
+       this.getTaskList();
+     },
     /**
      * 多删除
      */
@@ -221,7 +258,7 @@ export default {
   },
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 .public-page {
   display: flex;
   flex-direction: column;

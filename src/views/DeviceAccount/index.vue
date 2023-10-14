@@ -7,6 +7,7 @@
         size="small"
         style="margin-right: 12px"
       >
+        <el-option label="全部" :value="-1"></el-option>
         <el-option label="未使用" :value="0"></el-option>
         <el-option label="已使用" :value="1"></el-option>
       </el-select>
@@ -17,6 +18,10 @@
     <el-table :data="tableData" class="table" :loading="loading">
       <el-table-column prop="id" label="ID" width="55" />
       <el-table-column prop="account" label="账号" align="center" />
+      <el-table-column prop="assigned_filter_count" label="领取筛选号码数量" align="center" />
+      <el-table-column prop="filter_count" label="已筛选号码数量" align="center" />
+      <el-table-column prop="assigned_send_count" label="领取发送号码数量" align="center" />
+      <el-table-column prop="send_count" label="已发送号码数量" align="center" />
       <el-table-column prop="status" label="状态" align="center">
         <template slot-scope="scope">
           <el-tag type="info" v-if="scope.row.status == 0" size="small"
@@ -58,12 +63,11 @@
 
 <script>
 import { deviceAccounts, useDeviceAccount, addDeviceAccount } from "@/api";
-import dayjs from "dayjs";
 
 export default {
   data() {
     return {
-      status: 0,
+      status: -1,
       tableData: [],
       loading: false,
       page_num: 10,
@@ -146,7 +150,7 @@ export default {
   },
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 .button {
   margin-right: 12px;
 }

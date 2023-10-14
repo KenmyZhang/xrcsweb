@@ -98,7 +98,7 @@ export default {
   },
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 .msgs-box {
   padding: 12px;
   display: flex;

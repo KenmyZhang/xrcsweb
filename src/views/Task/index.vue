@@ -1,10 +1,18 @@
 <template>
   <div class="public-page">
     <el-form :inline="true" :model="formValues" size="small">
-      <el-form-item label="状态">
-        <el-select v-model="formValues.status" placeholder="活动区域" clearable>
+      <el-form-item label="启动状态">
+        <el-select v-model="formValues.status" placeholder="状态" clearable>
+          <el-option label="全部" :value="-1"></el-option>
           <el-option label="未启动" :value="0"></el-option>
           <el-option label="已启动" :value="1"></el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="领取状态">
+        <el-select v-model="formValues.assign_status" placeholder="状态" clearable>
+          <el-option label="全部" :value="-1"></el-option>
+          <el-option label="可领取" :value="0"></el-option>
+          <el-option label="不可领取" :value="1"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item>
@@ -22,7 +30,7 @@
     </el-tabs>
     <el-table :data="tableData" class="table">
       <el-table-column prop="id" label="ID" width="55" />
-      <el-table-column prop="app_key" label="秘钥" width="160px">
+      <el-table-column prop="app_key" label="秘钥" width="200px">
         <template slot-scope="scope">
           <div
             class="flex-cb"
@@ -37,9 +45,14 @@
         </template>
       </el-table-column>
       <el-table-column prop="filename" label="文件名" />
-      <el-table-column prop="reply_id" label="回复规则id" />
-      <el-table-column prop="reply_content" label="回复内容" />
       <el-table-column prop="interval" label="消息延迟" />
+      <el-table-column prop="total" label="任务总数" />
+      <el-table-column prop="process_count" label="已发送数" />
+      <el-table-column label="处理进度">
+        <template slot-scope="scope">
+          {{ ((scope.row.process_count / scope.row.total) * 100).toFixed(2) }}%
+        </template>
+      </el-table-column>
       <el-table-column prop="status" label="状态">
         <template slot-scope="scope">
           <el-tag
@@ -56,16 +69,6 @@
           >
         </template>
       </el-table-column>
-      <el-table-column prop="handle_status" label="处理状态">
-        <template slot-scope="scope">
-          {{
-            scope.row.handle_status === null ||
-            scope.row.handle_status === undefined
-              ? "未知"
-              : ["未处理", "处理中", "处理完成"][scope.row.handle_status]
-          }}
-        </template>
-      </el-table-column>
 
       <el-table-column prop="created_time" label="创建日期" width="180px">
         <template slot-scope="scope">
@@ -75,15 +78,22 @@
 
       <el-table-column label="操作" width="140" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-button type="text" @click="$refs.showMemberRef.open(scope.row)"
-            >成员信息</el-button
-          >
+          <el-button type='text' @click='ShowHi(scope.row)'>打招呼配置</el-button>
+          <el-button type="text" @click="$refs.showMemberRef.open(scope.row)">成员信息</el-button>
           <el-button
             type="text"
             @click="startTask(scope.row)"
             v-if="scope.row.status == 0"
             >开启</el-button
           >
+          <el-popconfirm
+              title="确定删除吗？"
+              @confirm="handleRemove(scope.row)"
+            >
+              <el-button type="text" size="mini" slot="reference">
+                删除
+              </el-button>
+        </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
@@ -100,13 +110,24 @@
     />
     <modify ref="modifyRef" @conform="getList" />
     <ShowMember ref="showMemberRef" @conform="getList" />
+    <el-dialog title='打招呼配置' width='70%' :visible.sync='show_hi'>
+      <el-table class='table' :data='hi_list'>
+        <el-table-column label='编号' prop='id' />
+        <el-table-column label='内容' prop='content'>
+          <template slot-scope='scope'>
+            <audio controls :src='scope.row.content' v-if='scope.row.type === 2' />
+            <span v-else>{{scope.row.content}}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import Modify from "./Modify.vue";
 import ShowMember from "./ShowMember.vue";
-import { phoneTaskStart, phoneTaskList } from "@/api";
+import { phoneTaskStart, phoneTaskList,delPhoneTask, GetHi } from "@/api";
 import dayjs from "dayjs";
 
 export default {
@@ -118,9 +139,12 @@ export default {
       page_num: 10,
       total: 0,
       formValues: {
-        status: "",
+        status: -1,
+        assign_status: -1,
       },
       tableData: [],
+      hi_list: [],
+      show_hi: false,
       loading: false,
       // multipleSelection: [],
     };
@@ -133,8 +157,13 @@ export default {
   created() {
     this.getList();
   },
-  mounted() {},
   methods: {
+    ShowHi(item) {
+      GetHi({ task_id: item.id }).then(res => {
+        this.hi_list = res.data || []
+        this.show_hi = true
+      })
+    },
     handleClick(tab, event) {
       this.getList();
     },
@@ -150,7 +179,7 @@ export default {
       this.getList();
     },
     onCopy(text) {
-      console.log(text);
+      // console.log(text);
       //创建input标签
       var input = document.createElement("input");
       //将input的值设置为需要复制的内容
@@ -186,6 +215,7 @@ export default {
         page_num: this.page_num,
         status: this.formValues.status,
         handle_status: this.handle_status,
+        assign_status: this.formValues.assign_status,
       });
       this.loading = false;
       this.total = total;
@@ -194,10 +224,18 @@ export default {
     /**
      * 单删除
      */
-    // async hanldeDel(row) {
-    //   const params = { ids: [row.id] };
-    //   this.delApi(params);
-    // },
+     async handleRemove(row) {
+       const { code } = await delPhoneTask({
+         id: row.id,
+       });
+      if (code == 200) {
+        this.$message.success("删除成功");
+        this.getTableData();
+      } else {
+        this.$message.error("删除失败");
+      }
+       this.getList();
+     },
     /**
      * 多删除
      */
@@ -231,5 +269,5 @@ export default {
   },
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 </style>

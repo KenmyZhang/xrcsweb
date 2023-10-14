@@ -62,7 +62,7 @@ export default {
 };
 </script>
 
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 .page {
   padding: 48px 24px;
   box-sizing: border-box;

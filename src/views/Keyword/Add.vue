@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :title="form.id ? '编辑关键词' : '新增关键词'"
+    :title="form.id ? '编辑成交关键词' : '新增成交关键词'"
     :visible.sync="show"
     width="70%"
     destroy-on-close
@@ -11,14 +11,6 @@
           <el-input
             placeholder="请输入关键字"
             v-model="form.keyword"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="内容" prop="content">
-          <el-input
-            type="textarea"
-            placeholder="请输入"
-            :rows="4"
-            v-model="form.content"
           ></el-input>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
@@ -117,6 +109,6 @@ export default {
   },
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 /* @import url(); 引入css类 */
 </style>

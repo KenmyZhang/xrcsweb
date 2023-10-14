@@ -1,9 +1,9 @@
 <template>
   <div class="public-page">
     <div class="flex-c" style="margin-bottom: 12px">
-      关键词：
+      成交关键词：
       <el-input
-        placeholder="请输入关键词"
+        placeholder="请输入成交关键词"
         v-model="keyword"
         size="small"
         clearable
@@ -39,8 +39,7 @@
     >
       <el-table-column type="selection" width="55"> </el-table-column>
       <el-table-column prop="id" label="ID" width="55" />
-      <el-table-column prop="keyword" label="关键词" />
-      <el-table-column prop="content" label="内容"> </el-table-column>
+      <el-table-column prop="keyword" label="成交关键词" />
       <el-table-column prop="remark" label="备注"> </el-table-column>
       <el-table-column prop="created_at" label="添加日期">
         <template slot-scope="scope">
@@ -164,7 +163,7 @@ export default {
         page: this.page,
         page_num: this.page_num,
       };
-      console.log(1298, this.keyword);
+      // console.log(1298, this.keyword);
       if (this.keyword) {
         params.keyword = this.keyword;
       }
@@ -175,6 +174,6 @@ export default {
   },
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 
 </style>

@@ -107,7 +107,7 @@ export default {
   },
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 /* @import url(); 引入css类 */
 .w-table {
   // max-height: 60vh;

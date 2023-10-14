@@ -2,7 +2,6 @@
   <el-dialog title="选择" :visible.sync="show" width="70%" destroy-on-close>
     <el-table :data="tableData" class="table">
       <el-table-column prop="id" label="ID" width="55" />
-      <el-table-column prop="city" label="城市" />
       <el-table-column prop="content" label="内容"> </el-table-column>
       <el-table-column prop="enable" label="状态" width="60px">
         <template slot-scope="scope">
@@ -59,7 +58,7 @@ export default {
   },
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 /* @import url(); 引入css类 */
 .w-table {
   // max-height: 60vh;

@@ -63,7 +63,7 @@ export default {
   methods: {},
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 path {
   fill: inherit !important;
 }

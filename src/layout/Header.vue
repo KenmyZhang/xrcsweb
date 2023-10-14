@@ -75,7 +75,7 @@ export default {
       }
     },
     logout() {
-      console.log(33);
+      // console.log(33);
       sessionStorage.removeItem("token");
       sessionStorage.removeItem("account");
       location.href = "/login";
@@ -83,7 +83,7 @@ export default {
   },
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 .header {
   height: 64px;
   padding: 0 36px;

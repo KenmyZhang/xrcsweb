@@ -20,7 +20,7 @@ export default {
   },
 };
 </script>
-<style rel="stylesheet/scss" lang="scss">
+<style lang="stylus">
 .public-page {
   padding: 12px;
   box-sizing: border-box;
@@ -130,4 +130,3 @@ export default {
   text-align: center;
 }
 </style>
-

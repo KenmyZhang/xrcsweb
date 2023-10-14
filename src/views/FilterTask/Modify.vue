@@ -75,6 +75,7 @@ export default {
       helloContentList: [],
       rules: {
         taskId: [{ required: true, message: "请输入", trigger: "blur" }],
+        filename: [{ required: true, message: '请选择文件', trigger: 'change' }],
         reply_ids: [{ required: true, message: "请输入", trigger: "blur" }],
         interval: [{ required: true, message: "请输入", trigger: "blur" }],
       },
@@ -111,15 +112,16 @@ export default {
         valid: true,
       });
       this.helloContentList = data;
-      console.log(87, this.helloContentList);
+      // console.log(87, this.helloContentList);
     },
     async getTaskList() {
       const { data = [] } = await phoneUploadhistory({
+        not_in_filter_task: true,
         page: 1,
         page_num: 1000000,
       });
       this.taskList = data || [];
-      console.log('this.taskList',  this.taskList);
+      // console.log('this.taskList',  this.taskList);
     },
 
     async open(form) {
@@ -155,7 +157,7 @@ export default {
       // const reply_contents = arr.map(v=>v.content).join(',')
 
       const task = this.taskList.find((v) => v.id == this.form.taskId);
-      console.log('this.form.taskId', this.form.taskId);
+      // console.log('this.form.taskId', this.form.taskId);
       const params = {
         interval: this.form.interval,
         filename: task.filename,
@@ -168,7 +170,7 @@ export default {
         this.$emit("conform");
         this.close();
       } else {
-        this.$message.error("新增失败");
+        this.$message.error("新增失败," + res.result);
       }
     },
     /**
@@ -187,6 +189,6 @@ export default {
   },
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 /* @import url(); 引入css类 */
 </style>

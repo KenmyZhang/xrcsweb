@@ -23,14 +23,6 @@
         <el-form-item label="内容" prop="content" v-if="form.type == 2">
           <UploadVideo v-model="form.content" />
         </el-form-item>
-        <el-form-item label="城市" prop="city">
-          <el-cascader
-            class="w100"
-            v-model="form.city"
-            :options="cityOptions"
-            :props="cityProps"
-          ></el-cascader>
-        </el-form-item>
         <el-form-item label="状态" prop="enable">
           <el-switch
             active-color="#13ce66"
@@ -106,7 +98,7 @@ export default {
           const len = i.length;
           return i.slice(0, len - 1);
         });
-      console.log(889, city);
+      // console.log(889, city);
       this.form = { ...this.form, ...form, city };
     },
     close() {
@@ -129,12 +121,12 @@ export default {
      */
     async handleAdd() {
       const city = this.form.city.map((i) => i + "市").join(",");
-      console.log(1231, this.form.city);
-      console.log(
-        1232,
-        this.form.city.map((i) => i + "市")
-      );
-      console.log(1233, city);
+      // console.log(1231, this.form.city);
+      // console.log(
+      //   1232,
+      //   this.form.city.map((i) => i + "市")
+      // );
+      // console.log(1233, city);
       const { code } = await add({ ...this.form, city });
       if (code == 200) {
         this.$message.success("新增成功");
@@ -161,6 +153,6 @@ export default {
   },
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 /* @import url(); 引入css类 */
 </style>

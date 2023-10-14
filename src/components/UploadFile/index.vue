@@ -58,7 +58,7 @@ export default {
   methods: {
     // 处理移除操作
     handleRemove(file, fileList) {
-      console.log("handleRemove", file, fileList);
+      // console.log("handleRemove", file, fileList);
       this.fileList = fileList;
       this.formatImgsStr(fileList);
     },
@@ -80,16 +80,17 @@ export default {
       formData.append("rm_reply", this.rm_reply);
 
       // 调用后端服务器的接口
-      console.log(1, this.rm_dup);
-      console.log(2, this.rm_reply);
-      const { result = {} } = await phoneUpload(formData);
+      // console.log(1, this.rm_dup);
+      // console.log(2, this.rm_reply);
+      const { code, result = {} } = await phoneUpload(formData);
+      // console.log(result)
       const { path } = result;
       file.file.status = path ? "success" : "error";
       file.file.path = path;
       if (path) {
         this.$message.success("文件" + file.file.name + "上传成功");
       } else {
-        this.$message.error("文件" + file.file.name + "上传失败");
+        this.$message.error(result);
       }
       this.loading = false;
     },
@@ -104,7 +105,7 @@ export default {
     // 格式化数据
     formatImgsStr(fileList) {
       const imgStr = fileList.map((i) => i.raw.path).join(",");
-      console.log("imgStr", imgStr);
+      // console.log("imgStr", imgStr);
       this.$emit("input", imgStr);
     },
     // 文件上传前的判断
@@ -140,7 +141,7 @@ export default {
   },
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 /deep/.el-upload-list--picture-card .el-upload-list__item {
   width: 108px;
   height: 108px;

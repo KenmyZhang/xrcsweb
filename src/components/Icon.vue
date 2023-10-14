@@ -127,7 +127,7 @@ export default {
   methods: {},
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 .icon-btn {
   font-size: 12px;
   .icon {

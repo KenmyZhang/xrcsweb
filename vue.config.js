@@ -1,4 +1,3 @@
-'use strict'
 const path = require('path')
 const defaultSettings = require('./src/settings.js')
 
@@ -16,20 +15,24 @@ module.exports = {
   lintOnSave: false,
   productionSourceMap: false,
   devServer: {
-    port: port,
-    // open: true,
-    overlay: {
-      warnings: false,
-      errors: true
-    }
+    port: port
   },
   configureWebpack: {
-    // provide the app's title in webpack's name field, so that
-    // it can be accessed in index.html to inject the correct title.
     name: name,
     resolve: {
       alias: {
         '@': resolve('src')
+      }
+    },
+    performance: {
+      hints:false,
+      //入口起点的最大体积
+      maxEntrypointSize: 5000000000,
+      //生成文件的最大体积
+      maxAssetSize: 3000000000,
+      //只给出js文件的性能提示
+      assetFilter: function(assetFilename) {
+        return assetFilename.endsWith('.js');
       }
     }
   },
@@ -74,14 +77,6 @@ module.exports = {
     config
       .when(process.env.NODE_ENV !== 'development',
         config => {
-          config
-            .plugin('ScriptExtHtmlWebpackPlugin')
-            .after('html')
-            .use('script-ext-html-webpack-plugin', [{
-            // `runtime` must same as runtimeChunk name. default is `runtime`
-              inline: /runtime\..*\.js$/
-            }])
-            .end()
           config
             .optimization.splitChunks({
               chunks: 'all',

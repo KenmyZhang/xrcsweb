@@ -5,21 +5,17 @@ import Config from '@/settings'
 // 创建axios实例
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // api 的 base_url
-  // baseURL: 'http://43.139.163.35:8081' || process.env.NODE_ENV === 'production' ? process.env.VUE_APP_BASE_API : '/', // api 的 base_url
   timeout: Config.timeout // 请求超时时间
 })
 
 // request拦截器
 service.interceptors.request.use(
   config => {
-    config.headers['Content-Type'] = 'application/json'
-    config.headers['content-type'] = 'application/json'
+    config.headers['Content-Type'] = config.headers['Content-Type'] || 'application/json'
     config.headers['token'] = sessionStorage.getItem('token') || ''
     return config
   },
   error => {
-    // Do something with request error
-    console.log(error) // for debug
     Promise.reject(error)
   }
 )
@@ -35,16 +31,9 @@ service.interceptors.response.use(
       location.href='/login'
       return Promise.reject('error')
     }
-    // if (code != 200) {
-    //   Notification.error({
-    //     title: response.data.msg || '请求出错~'
-    //   })
-    //   return Promise.reject('error')
-    // }
     return response.data
   },
   error => {
-    console.log('errro--r', error)
     let code = 0
     try {
       code = error.response.status

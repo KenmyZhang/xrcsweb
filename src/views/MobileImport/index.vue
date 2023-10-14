@@ -27,7 +27,7 @@ export default {
   methods: {},
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 .upload-box {
   width: 50%;
   min-width: 300px;

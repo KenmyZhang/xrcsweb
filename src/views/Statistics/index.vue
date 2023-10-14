@@ -103,7 +103,7 @@ export default {
       dayjs().subtract(30, "days").format("YYYY-MM-DD"),
       this.time,
     ];
-    console.log(this.time, this.timeRange);
+    // console.log(this.time, this.timeRange);
   },
   mounted() {
     this.getMin();
@@ -126,7 +126,7 @@ export default {
     },
     onExport(type) {
       const arr = this[type];
-      console.log(223, arr);
+      // console.log(223, arr);
 
       let dataArr = [];
       let titleArr = [];
@@ -358,7 +358,7 @@ export default {
       // this.mins = arr;
       this.minloading = false;
       this.mins = data || [];
-      console.log(99, this.mins);
+      // console.log(99, this.mins);
       this.initMin();
     },
     async getHour() {
@@ -366,7 +366,7 @@ export default {
       const { data } = await hourList({ time: this.time });
       this.hourloading = false;
       this.hours = data;
-      console.log(100, this.hours);
+      // console.log(100, this.hours);
       this.initHour();
     },
     async getDay() {
@@ -376,12 +376,12 @@ export default {
       const { data } = await dayList({ begin_time, end_time });
       this.dayloading = false;
       this.days = data;
-      console.log(101, this.days);
+      // console.log(101, this.days);
       this.initDay();
     },
   },
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 /* @import url(); 引入css类 */
 </style>

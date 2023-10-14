@@ -123,7 +123,7 @@ export default {
 
     // 音频上传前的判断
     beforeUpload(file) {
-      console.log(14, file.type);
+      // console.log(14, file.type);
       const isVideo = [
         "video/mp4",
         "video/ogg",
@@ -136,6 +136,7 @@ export default {
         "audio/ogg",
         "audio/amr",
         "audio/mpeg",
+        "audio/x-m4a",
       ].includes(file.type);
       const isLt20M = file.size / 1024 / 1024 < 1000;
 
@@ -150,7 +151,7 @@ export default {
   },
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 /deep/.el-upload-list__item {
   width: 240px;
 }

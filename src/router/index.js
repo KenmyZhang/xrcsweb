@@ -28,14 +28,6 @@ export const nomorlRoutes = {
       }
     },
     {
-      path: "chat",
-      component: () => import("../views/Chat/index.vue"),
-      meta: {
-        title: '聊天',
-        icon: 'chat'
-      }
-    },
-    {
       path: "filterTask",
       component: () => import("../views/FilterTask/index.vue"),
       meta: {
@@ -52,6 +44,14 @@ export const nomorlRoutes = {
       }
     },
     {
+      path: "chat",
+      component: () => import("../views/Chat/index.vue"),
+      meta: {
+        title: '通讯录',
+        icon: 'chat'
+      }
+    },
+    {
       path: "sayHello",
       component: () => import("../views/SayHello/index.vue"),
       meta: {
@@ -63,7 +63,7 @@ export const nomorlRoutes = {
       path: "keyword",
       component: () => import("../views/Keyword/index.vue"),
       meta: {
-        title: '关键词',
+        title: '成交关键词',
         icon: 'chat'
       }
     },

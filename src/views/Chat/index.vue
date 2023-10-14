@@ -50,7 +50,7 @@ export default {
     // 点击左边的手机号，选择用户
     handleClickRow(row) {
       this.row = row;
-      console.log(223, row);
+      // console.log(223, row);
       this.$nextTick(() => {
         this.$refs.chatHistoryRef.getList(row, true);
       });
@@ -68,12 +68,12 @@ export default {
         this.$refs.chatHistoryRef.getList(this.row, true);
         this.content = ''
       }
-      console.log(this.content);
+      // console.log(this.content);
     },
   },
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 /* @import url(); 引入css类 */
 .public-page {
   background: #f9f9f9;

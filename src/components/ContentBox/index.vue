@@ -51,7 +51,7 @@ export default {
   methods: {},
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 .imgs {
   display: flex;
   flex-wrap: wrap;

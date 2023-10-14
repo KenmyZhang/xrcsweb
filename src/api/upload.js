@@ -8,8 +8,6 @@ export function upload(data) {
     url: `/api/v3/image/upload`,
     method: 'post',
     data,
-    // method: 'get',
-    // params: data,
   })
 }
 
@@ -19,12 +17,9 @@ export function uploadFile(data) {
     url: `/api/v3/file/upload`,
     method: 'post',
     data,
-    // method: 'get',
-    // params: data,
+    headers: { 'Content-Type': 'multipart/form-data' }
   })
 }
-
-
 
 // 上传txt电话
 export function phoneUpload(data) {
@@ -32,7 +27,14 @@ export function phoneUpload(data) {
     url: `/api/v3/phone/upload`,
     method: 'post',
     data,
-    // method: 'get',
-    // params: data,
+    headers: { 'Content-Type': 'multipart/form-data' }
+  })
+}
+
+export function phoneUploadDel(data) {
+  return request({
+    url: `/api/v3/phone/upload/history/del`,
+    method: 'post',
+    data,
   })
 }

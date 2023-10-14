@@ -14,7 +14,7 @@ export default {
   methods: {},
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 /* @import url(); 引入css类 */
 .dddd {
   width: 500px;

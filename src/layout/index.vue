@@ -28,7 +28,7 @@ export default {
   methods: {},
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 .layout {
   width: 100vw;
   height: 100vh;

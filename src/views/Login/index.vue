@@ -72,7 +72,7 @@ export default {
   },
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 .login-page {
   width: 100vw;
   height: 100vh;

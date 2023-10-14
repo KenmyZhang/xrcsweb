@@ -45,8 +45,8 @@ export function exportExcel(json, name, titleArr, sheetName) {
     }
     return count
   }
-  console.log('titleArr')
-  console.log(titleArr)
+  // console.log('titleArr')
+  // console.log(titleArr)
   for (const key1 in json) {
     if (json.hasOwnProperty(key1)) {
       const element = json[key1]
@@ -65,7 +65,7 @@ export function exportExcel(json, name, titleArr, sheetName) {
   }
   // keyArray为英文字段表头
   data.splice(0, 0, keyArray, titleArr)
-  console.log('data', data)
+  // console.log('data', data)
   const ws = XLSX.utils.aoa_to_sheet(data)
   const wb = XLSX.utils.book_new()
   // 此处隐藏英文字段表头

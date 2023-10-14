@@ -15,8 +15,8 @@
     ></el-input>
     <div class="flex-cb" style="margin-top: 12px">
       <el-radio-group v-model="already_reply" @input="getList">
-        <el-radio :label="true">已回复</el-radio>
-        <el-radio :label="false">未回复</el-radio>
+        <el-radio :label="30">已回复</el-radio>
+        <el-radio :label="20">未回复</el-radio>
         <el-radio :label="10">已成交</el-radio>
       </el-radio-group>
       <el-button size="small" @click="getList">查询</el-button>
@@ -24,12 +24,12 @@
     <el-table :data="tableData" class="table" @row-click="handleClickRow">
       <el-table-column prop="phone" label="手机号" />
       <el-table-column prop="filename" label="文件名" />
-      <el-table-column label="状态" width="60px">
+      <!--el-table-column label="状态" width="60px">
         <template slot-scope="scope">
           {{ ["离线", "在线"][scope.row.status] }}
         </template>
       </el-table-column>
-      <!-- <el-table-column prop="upload_time" label="上传日期">
+      < <el-table-column prop="upload_time" label="上传日期">
         <template slot-scope="scope">
           {{ getTime(scope.row.upload_time) }}
         </template>
@@ -81,6 +81,8 @@ export default {
     },
     async getList() {
       const params = {
+        valid: true,
+        already_reply: this.already_reply,
         phone: this.phone,
         filename: this.filename,
         page: this.page,
@@ -88,13 +90,17 @@ export default {
       };
       if (this.already_reply === 10) {
         params.trade_status = true;
-      } else {
-        params.already_reply = this.already_reply;
+      }
+      if (this.already_reply === 20) {
+        params.not_reply = true;
+      }
+      if (this.already_reply === 30) {
+        params.already_reply = true;
       }
 
       const { data = [], total } = await phoneList(params);
       this.tableData = data;
-      console.log(12, this.tableData);
+      // console.log(12, this.tableData);
       this.total = total;
     },
     handleClickRow(row) {
@@ -103,7 +109,7 @@ export default {
   },
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 .phone-list-component {
   padding: 12px;
   display: flex;

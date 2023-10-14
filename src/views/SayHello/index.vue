@@ -32,12 +32,7 @@
     >
       <el-table-column type="selection" width="55"> </el-table-column>
       <el-table-column prop="id" label="ID" width="55" />
-      <el-table-column prop="city" label="城市" width="200" />
-      <!-- <el-table-column prop="type" label="类型">
-        <template slot-scope="scope">
-          {{ ["文字", "文字", "音频"][scope.row.type] }}
-        </template>
-      </el-table-column> -->
+
       <el-table-column prop="content" label="内容" width="200">
         <template slot-scope="scope">
           <ContentBox :content="scope.row.content" :type="scope.row.type" />
@@ -165,7 +160,7 @@ export default {
   },
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 .button {
   margin-right: 12px;
 }

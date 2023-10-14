@@ -13,8 +13,43 @@
     </el-form>
     <el-table :data="tableData" class="table">
       <el-table-column prop="id" label="ID" width="55" />
-      <el-table-column prop="account" label="账户" />
+      <el-table-column prop="total" label="总数" />
+      <el-table-column prop="repeated_count" label="重复数量" />
+      <el-table-column prop="reply_count" label="已回复数量" />
       <el-table-column prop="filename" label="文件名" />
+      <el-table-column prop="already_in_filter_task" label="是否在筛选任务中">
+        <template slot-scope="scope">
+          <el-tag
+            type="warning"
+            size="small"
+            v-if="scope.row.already_in_filter_task === null || scope.row.already_in_filter_task === undefined"
+            >未知</el-tag
+          >
+          <el-tag type="info" v-if="scope.row.already_in_filter_task == false" size="small"
+            >否</el-tag
+          >
+          <el-tag type="success" v-if="scope.row.already_in_filter_task == true" size="small"
+            >是</el-tag
+          >
+        </template>
+      </el-table-column>
+
+      <el-table-column prop="already_in_send_task" label="是否在发送任务中">
+        <template slot-scope="scope">
+          <el-tag
+            type="warning"
+            size="small"
+            v-if="scope.row.already_in_send_task === null || scope.row.already_in_send_task === undefined"
+            >未知</el-tag
+          >
+          <el-tag type="info" v-if="scope.row.already_in_send_task == false" size="small"
+            >否</el-tag
+          >
+          <el-tag type="success" v-if="scope.row.already_in_send_task == true" size="small"
+            >是</el-tag
+          >
+        </template>
+      </el-table-column>
 
       <el-table-column prop="upload_time" label="上传日期">
         <template slot-scope="scope">
@@ -25,6 +60,11 @@
         <template slot-scope="scope">
           <el-button type="text" @click="checkPhone(scope.row)">查看号码</el-button>
           <el-button type="text" @click="uploadTxt(scope.row)">下载</el-button>
+          <!--el-popconfirm title="确定删除吗？" @confirm="hanldeDel(scope.row)">
+            <el-button size="mini" type="text" slot="reference">
+              删除
+            </el-button>
+          </el-popconfirm-->
         </template>
       </el-table-column>
     </el-table>
@@ -45,6 +85,7 @@
 
 <script>
 import { phoneUploadhistory } from "@/api";
+import { phoneUploadDel } from '@/api/upload'
 import dayjs from "dayjs";
 import { downloadUrlFile } from "./utils";
 import ShowPhone from './ShowPhone'
@@ -115,10 +156,17 @@ export default {
     /**
      * 单删除
      */
-    // async hanldeDel(row) {
-    //   const params = { ids: [row.id] };
-    //   this.delApi(params);
-    // },
+    async hanldeDel(row) {
+     // const {code } =
+      await phoneUploadDel({
+       id: row.id
+     });
+     // if (code == 200) {
+     //   this.$message.success("删除成功");
+     // } else {
+     //   this.$message.error("删除失败");
+     // }
+    },
     /**
      * 多删除
      */
@@ -152,7 +200,7 @@ export default {
   },
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 // .public-page {
 //   display: flex;
 //   flex-direction: column;

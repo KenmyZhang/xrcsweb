@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import { phoneTask, phoneUploadhistory } from "@/api";
+import { phoneTask, phoneTaskFiles } from "@/api";
 import { get } from "@/api/sayHello";
 
 export default {
@@ -103,21 +103,20 @@ export default {
       // const arr = data.map(v=>v.content)
       // this.helloContentList = Array.from(new Set(arr));
       this.helloContentList = data;
-      console.log(87, this.helloContentList);
+      // console.log(87, this.helloContentList);
     },
     async getTaskList() {
-      const { data = [] } = await phoneUploadhistory({
-        page: 1,
-        page_num: 1000000,
+      const { data = [] } = await phoneTaskFiles({});
+      // console.log(data)
+      // console.log('123213')
+      // this.taskList = data || [];
+      const taskList = [];
+      data.forEach((v) => {
+        if (!taskList.includes(v.filename)) {
+          taskList.push(v.filename);
+        }
       });
-      this.taskList = data || [];
-      // const taskList = [];
-      // data.forEach((v) => {
-      //   if (!taskList.includes(v.filename)) {
-      //     taskList.push(v.filename);
-      //   }
-      // });
-      // this.taskList = taskList;
+      this.taskList = taskList;
     },
 
     /**
@@ -172,7 +171,7 @@ export default {
         this.$emit("conform");
         this.close();
       } else {
-        this.$message.error("新增失败");
+        this.$message.error("新增失败,"+result);
       }
     },
     /**
@@ -191,6 +190,6 @@ export default {
   },
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 /* @import url(); 引入css类 */
 </style>

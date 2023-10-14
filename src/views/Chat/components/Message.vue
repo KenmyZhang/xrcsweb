@@ -56,7 +56,7 @@ export default {
   methods: {},
 };
 </script>
-<style rel="stylesheet/scss" lang="scss" scoped>
+<style lang="stylus" scoped>
 /deep/.face-icon {
   width: 18px;
   height: 18px;
