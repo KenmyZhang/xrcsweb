@@ -74,11 +74,16 @@
         <template slot-scope="scope">
           <el-button type='text' @click='ShowHi(scope.row)'>打招呼配置</el-button>
           <el-button type="text" @click="$refs.showMemberRef.open(scope.row)">成员信息</el-button>
-          <el-button
-            type="text"
-            @click="stoptTask(scope.row)"
-            >停止</el-button
-          >
+
+          <el-popconfirm
+              title="确定停止吗？"
+              @confirm="stoptTask(scope.row)"
+            >
+             <el-button type="text" size="mini" slot="reference">
+                停止
+              </el-button>
+          </el-popconfirm>
+
           <el-popconfirm
               title="确定删除吗？"
               @confirm="handleRemove(scope.row)"

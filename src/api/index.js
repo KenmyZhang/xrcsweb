@@ -52,6 +52,13 @@ export function delPhoneTask(data) {
   })
 }
 
+export function phoneTaskStop(data) {
+  return request({
+    url: `/api/v3/phone/task/stop`,
+    method: 'post',
+    data,
+  })
+}
 
 
 // 任务列表
