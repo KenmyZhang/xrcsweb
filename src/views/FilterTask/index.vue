@@ -45,6 +45,16 @@
       <el-table-column prop="valid_count" label="有效数量" />
       <el-table-column prop="invalid_count" label="无效数量" />
       <el-table-column prop="un_process_count" label="未处理数量" />
+      <el-table-column prop="status" label="是否停止状态">
+        <template slot-scope="scope">
+          <el-tag type="info" v-if="scope.row.stop == 0" size="small"
+            >否</el-tag
+          >
+          <el-tag type="success" v-if="scope.row.stop == 1" size="small"
+            >是</el-tag
+          >
+        </template>
+      </el-table-column>
       <el-table-column label="领取进度">
         <template slot-scope="scope">
           {{ ((scope.row.assigned_count / scope.row.total)* 100).toFixed(2) }}%
@@ -70,6 +80,16 @@
             >
               <el-button type="text" size="mini" slot="reference">
                 删除
+              </el-button>
+            </el-popconfirm>
+          </div>
+          <div class="flex-cb" style="justify-content: space-evenly">
+            <el-popconfirm
+              title="确定停止吗？"
+              @confirm="handleStop(scope.row)"
+            >
+              <el-button type="text" size="mini" slot="reference">
+                停止
               </el-button>
             </el-popconfirm>
           </div>
@@ -102,7 +122,7 @@
 </template>
 
 <script>
-import { filterTasks, phoneUploadhistory,delFilterTask, GetMemberList } from "@/api";
+import { filterTasks, phoneUploadhistory,delFilterTask,stopFilterTask, GetMemberList } from "@/api";
 import dayjs from "dayjs";
 import Modify from "./Modify.vue";
 
@@ -221,6 +241,19 @@ export default {
         this.$message.success("删除成功");
       } else {
         this.$message.error("删除失败");
+      }
+       this.getList();
+       this.getTaskList();
+     },
+
+      async handleStop(row) {
+       const { code } = await stopFilterTask({
+         id: row.id,
+       })
+      if (code == 200) {
+        this.$message.success("停止成功");
+      } else {
+        this.$message.error("停止失败");
       }
        this.getList();
        this.getTaskList();

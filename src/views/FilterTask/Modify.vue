@@ -75,7 +75,6 @@ export default {
       helloContentList: [],
       rules: {
         taskId: [{ required: true, message: "请输入", trigger: "blur" }],
-        filename: [{ required: true, message: '请选择文件', trigger: 'change' }],
         reply_ids: [{ required: true, message: "请输入", trigger: "blur" }],
         interval: [{ required: true, message: "请输入", trigger: "blur" }],
       },

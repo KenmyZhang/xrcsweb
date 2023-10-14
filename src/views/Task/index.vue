@@ -53,19 +53,13 @@
           {{ ((scope.row.process_count / scope.row.total) * 100).toFixed(2) }}%
         </template>
       </el-table-column>
-      <el-table-column prop="status" label="状态">
+      <el-table-column prop="status" label="是否停止状态">
         <template slot-scope="scope">
-          <el-tag
-            type="warning"
-            size="small"
-            v-if="scope.row.status === null || scope.row.status === undefined"
-            >未知</el-tag
+          <el-tag type="info" v-if="scope.row.stop == 0" size="small"
+            >否</el-tag
           >
-          <el-tag type="info" v-if="scope.row.status == 0" size="small"
-            >未启动</el-tag
-          >
-          <el-tag type="success" v-if="scope.row.status == 1" size="small"
-            >已启动</el-tag
+          <el-tag type="success" v-if="scope.row.stop == 1" size="small"
+            >是</el-tag
           >
         </template>
       </el-table-column>
@@ -82,9 +76,8 @@
           <el-button type="text" @click="$refs.showMemberRef.open(scope.row)">成员信息</el-button>
           <el-button
             type="text"
-            @click="startTask(scope.row)"
-            v-if="scope.row.status == 0"
-            >开启</el-button
+            @click="stoptTask(scope.row)"
+            >停止</el-button
           >
           <el-popconfirm
               title="确定删除吗？"
@@ -127,7 +120,7 @@
 <script>
 import Modify from "./Modify.vue";
 import ShowMember from "./ShowMember.vue";
-import { phoneTaskStart, phoneTaskList,delPhoneTask, GetHi } from "@/api";
+import { phoneTaskStop, phoneTaskList,delPhoneTask, GetHi } from "@/api";
 import dayjs from "dayjs";
 
 export default {
@@ -196,13 +189,13 @@ export default {
       document.body.removeChild(input);
       this.$message.success("复制成功");
     },
-    async startTask(row) {
-      const { code } = await phoneTaskStart({ id: row.id });
+    async stoptTask(row) {
+      const { code } = await phoneTaskStop({ id: row.id });
       if (code == 200) {
-        this.$message.success("开启成功");
+        this.$message.success("停止成功");
         this.getList();
       } else {
-        this.$message.success("开启失败");
+        this.$message.success("停止失败");
       }
     },
     /**

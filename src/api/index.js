@@ -95,6 +95,17 @@ export function delFilterTask(data) {
     data,
   })
 }
+
+export function stopFilterTask(data) {
+  return request({
+    url: `/api/v3/filter/task/stop`,
+    // method: 'post',
+    // data,
+    method: 'post',
+    data,
+  })
+}
+
 // 新建筛选任务
 export function addFilterTasks(data) {
   return request({
