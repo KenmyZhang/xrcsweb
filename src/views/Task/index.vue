@@ -23,10 +23,10 @@
       </el-form-item>
     </el-form>
     <el-tabs v-model="handle_status" @tab-click="handleClick">
-      <el-tab-pane label="全部" name="-1"></el-tab-pane>
       <el-tab-pane label="未发送" name="0"></el-tab-pane>
       <el-tab-pane label="发送中" name="1"></el-tab-pane>
       <el-tab-pane label="发送完成" name="2"></el-tab-pane>
+      <el-tab-pane label="全部" name="-1"></el-tab-pane>
     </el-tabs>
     <el-table :data="tableData" class="table">
       <el-table-column prop="id" label="ID" width="55" />
@@ -132,7 +132,7 @@ export default {
   components: { Modify, ShowMember },
   data() {
     return {
-      handle_status: "-1",
+      handle_status: "0",
       page: 1,
       page_num: 10,
       total: 0,
