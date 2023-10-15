@@ -39,11 +39,15 @@
     </el-form>
     <el-table :data="tableData" class="table">
       <el-table-column prop="id" label="ID" width="55" />
-      <el-table-column prop="account" label="领取任务的账户" />
       <el-table-column prop="filename" label="文件名" />
       <el-table-column prop="total" label="总共数量" />
       <el-table-column prop="valid_count" label="有效数量" />
       <el-table-column prop="invalid_count" label="无效数量" />
+      <el-table-column label="有效占比">
+        <template slot-scope="scope">
+          {{ ((scope.row.valid_count / scope.row.total)* 100).toFixed(2) }}%
+        </template>
+      </el-table-column>
       <el-table-column prop="un_process_count" label="未处理数量" />
       <el-table-column prop="status" label="是否停止状态">
         <template slot-scope="scope">
