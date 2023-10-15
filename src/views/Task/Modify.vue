@@ -110,13 +110,15 @@ export default {
       // console.log(data)
       // console.log('123213')
       // this.taskList = data || [];
-      const taskList = [];
-      data.forEach((v) => {
-        if (!taskList.includes(v.filename)) {
-          taskList.push(v.filename);
-        }
-      });
-      this.taskList = taskList;
+      console.log(data)
+      console.log('data')
+      //const taskList = [];
+      //data.forEach((v) => {
+      //  if (!taskList.includes(v.filename)) {
+      //    taskList.push(v.filename);
+      //  }
+      //});
+      this.taskList = data;
     },
 
     /**
