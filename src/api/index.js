@@ -199,6 +199,9 @@ export function addDeviceAccount(data) {
 
 export const GetMemberList = params => request({ url: '/api/v3/filter/task/members', params })
 export const GetHi = params => request({ url: '/api/v3/phone/task/reply', params })
+export const GetPhoneList = params => request({ url: '/api/v3/phone/list', params })
+export const PostSendHi = data => request({ url: '/api/v3/phone/task/say/hello', method: 'POST', data })
+export const PostUpdateInterval = data => request({ url: '/api/v3/phone/task/interval', method: 'POST', data })
 
 // 获取电话号码
 // http://43.139.163.35:6688/api/v3/phone/list?filename=phone.txt&page=1&page_num=10

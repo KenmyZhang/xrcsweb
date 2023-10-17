@@ -76,6 +76,8 @@
       </el-table-column>
       <el-table-column label="操作" fixed="right" align="center" width="100">
         <template slot-scope="scope">
+          <el-button size='mini' type='text' @click='ShowPhone(scope.row, true)'>有效号码</el-button>
+          <el-button size='mini' type='text' @click='ShowPhone(scope.row, false)'>无效号码</el-button>
           <el-button size='mini' type='text' @click='ShowMember(scope.row)'>任务成员</el-button>
           <div class="flex-cb" style="justify-content: space-evenly">
             <el-popconfirm
@@ -122,13 +124,23 @@
       </el-table>
       <el-pagination class='tr' @size-change='ReLoadMember' @current-change='LoadMemberData' :current-page.sync='member_index' :page-sizes='[10, 20, 50]' :page-size='member_size' layout='total,sizes,prev,pager,next' :total='member_total' />
     </el-dialog>
+    <el-dialog :title="phone_is_valid ? '有效号码' : '无效号码'" width='70%' :visible.sync='show_phone'>
+      <div style='text-align: right;'>
+        <el-button type='primary' :loading='loading_phone' @click='ExportPhone'>导出</el-button>
+      </div>
+      <el-table class='table' :data='phone_list' v-loading='loading_phone'>
+        <el-table-column label='号码' prop='phone' />
+      </el-table>
+      <el-pagination class='tr' @size-change='ReLoadPhone' @current-change='LoadPhoneData' :current-page.sync='phone_index' :page-sizes='[10, 20, 50]' :page-size='phone_size' layout='total,sizes,prev,pager,next' :total='phone_total' />
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { filterTasks, phoneUploadhistory,delFilterTask,stopFilterTask, GetMemberList } from "@/api";
+import { filterTasks, phoneUploadhistory,delFilterTask,stopFilterTask, GetMemberList, GetPhoneList } from "@/api";
 import dayjs from "dayjs";
 import Modify from "./Modify.vue";
+import { exportExcel } from '@/utils/tools'
 
 export default {
   components: { Modify },
@@ -153,6 +165,13 @@ export default {
       member_total: 0,
       show_member: false,
       loading_member: false,
+      phone_index: 1,
+      phone_size: 10,
+      phone_list: [],
+      phone_total: 0,
+      phone_is_valid: false,
+      show_phone: false,
+      loading_phone: false,
       loading: false,
       // multipleSelection: [],
     };
@@ -167,11 +186,48 @@ export default {
     this.getTaskList();
   },
   methods: {
+    ShowPhone(item, is_valid) {
+      this.phone_is_valid = is_valid
+      this.phone_file = item.filename
+      this.show_phone = true
+      this.ReLoadPhone()
+    },
+    ReLoadPhone() {
+      this.phone_index = 1
+      this.LoadPhoneData()
+    },
+    LoadPhoneData() {
+      this.loading_phone = true
+      GetPhoneList({
+        filename: this.phone_file,
+        valid: this.phone_is_valid,
+        page: this.phone_index,
+        page_num: this.phone_size
+      }).then(res => {
+        this.phone_total = res.total || 0
+        this.phone_list = res.data || []
+      }).finally(() => {
+        this.loading_phone = false
+      })
+    },
+    ExportPhone() {
+      this.loading_phone = true
+      GetPhoneList({
+        filename: this.phone_file,
+        valid: this.phone_is_valid,
+        page: 1,
+        page_num: 200000
+      }).then(res => {
+        let name = this.phone_is_valid ? '有效号码' : '无效号码'
+        exportExcel((res.data || []).map(i => [i.phone]), name, [name], name)
+      }).finally(() => {
+        this.loading_phone = false
+      })
+    },
     ShowMember(item) {
-      this.member_index = 1
       this.member_id = item.id
       this.show_member = true
-      this.LoadMemberData()
+      this.ReLoadMember()
     },
     ReLoadMember() {
       this.member_index = 1

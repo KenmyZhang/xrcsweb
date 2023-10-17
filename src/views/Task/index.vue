@@ -72,6 +72,7 @@
 
       <el-table-column label="操作" width="140" align="center" fixed="right">
         <template slot-scope="scope">
+          <el-button type='text' @click='ShowEdit(scope.row)'>编辑</el-button>
           <el-button type='text' @click='ShowHi(scope.row)'>打招呼配置</el-button>
           <el-button type="text" @click="$refs.showMemberRef.open(scope.row)">成员信息</el-button>
 
@@ -109,7 +110,11 @@
     <modify ref="modifyRef" @conform="getList" />
     <ShowMember ref="showMemberRef" @conform="getList" />
     <el-dialog title='打招呼配置' width='70%' :visible.sync='show_hi'>
-      <el-table class='table' :data='hi_list'>
+      <div style='text-align: right;'>
+        <el-button size='small' type='primary' :disabled='!select_list.length' @click='SendHiBatch'>批量打招呼</el-button>
+      </div>
+      <el-table class='table' :data='hi_list' @selection-change='ChangeSel'>
+        <el-table-column type='selection' width='60' />
         <el-table-column label='编号' prop='id' />
         <el-table-column label='内容' prop='content'>
           <template slot-scope='scope'>
@@ -117,7 +122,23 @@
             <span v-else>{{scope.row.content}}</span>
           </template>
         </el-table-column>
+        <el-table-column label='操作' prop='handle'>
+          <template slot-scope='scope'>
+            <el-button type='text' @click='SendHi(scope.row)'>打招呼</el-button>
+          </template>
+        </el-table-column>
       </el-table>
+    </el-dialog>
+    <el-dialog destroy-on-close title='编辑' width='500px' :visible.sync='show_edit'>
+      <el-form label-width='100px' :model='form_edit' :rules='rule_edit' ref='form_edit'>
+        <el-form-item label='消息延迟' prop='interval'>
+          <el-input-number :min='0' v-model='form_edit.interval' />
+          <span style='margin-left: 10px;'>秒</span>
+        </el-form-item>
+      </el-form>
+      <div style='text-align: right;'>
+        <el-button type='primary' @click='SubmitEdit'>提交</el-button>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -125,7 +146,7 @@
 <script>
 import Modify from "./Modify.vue";
 import ShowMember from "./ShowMember.vue";
-import { phoneTaskStop, phoneTaskList,delPhoneTask, GetHi } from "@/api";
+import { phoneTaskStop, phoneTaskList,delPhoneTask, GetHi, PostSendHi, PostUpdateInterval } from "@/api";
 import dayjs from "dayjs";
 
 export default {
@@ -142,7 +163,13 @@ export default {
       },
       tableData: [],
       hi_list: [],
+      select_list: [],
       show_hi: false,
+      form_edit: '',
+      rule_edit: {
+        interval: [{ required: true, message: '请输入消息延迟', trigger: ['blur', 'input'] }]
+      },
+      show_edit: false,
       loading: false,
       // multipleSelection: [],
     };
@@ -156,7 +183,43 @@ export default {
     this.getList();
   },
   methods: {
+    ShowEdit(item) {
+      this.form_edit = item
+      this.show_edit = true
+    },
+    SubmitEdit() {
+      this.$refs.form_edit.validate(valid => {
+        if (!valid) return
+        PostUpdateInterval({ id: this.form_edit.id, interval: this.form_edit.interval }).then(res => {
+          if (res.msg === 'ok') {
+            this.show_edit = false
+            this.page = 1
+            this.getList()
+          } else {
+            this.$message({ type: 'warning', message: res.msg })
+          }
+        })
+      })
+    },
+    SendHi(item) {
+      this.SubmitSendHi([item.id])
+    },
+    SendHiBatch() {
+      this.SubmitSendHi(this.select_list.map(i => i.id))
+    },
+    SubmitSendHi(list) {
+      PostSendHi({ id: this.hi_id, reply_ids: list.join(',') }).then(res => {
+        if (res.msg === 'ok')
+          this.$message({ type: 'success', message: '打招呼成功' })
+        else
+          this.$message({ type: 'warning', message: res.msg })
+      })
+    },
+    ChangeSel(list) {
+      this.select_list = list
+    },
     ShowHi(item) {
+      this.hi_id = item.id
       GetHi({ task_id: item.id }).then(res => {
         this.hi_list = res.data || []
         this.show_hi = true
@@ -188,8 +251,6 @@ export default {
       input.select();
       //执行复制
       document.execCommand("copy");
-      //成功提示信息
-      this.$message.success("success!");
       //移除input标签
       document.body.removeChild(input);
       this.$message.success("复制成功");
