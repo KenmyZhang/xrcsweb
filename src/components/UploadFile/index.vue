@@ -39,6 +39,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    skip_filter: {
+      type: Boolean,
+      default: false,
+    },
     value: {
       type: String,
       default: "",

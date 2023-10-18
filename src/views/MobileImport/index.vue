@@ -3,9 +3,10 @@
     <div style="margin: 12px 0 16px 0">
       <el-checkbox v-model="rm_dup">去掉重复</el-checkbox>
       <el-checkbox v-model="rm_reply">去掉已回复</el-checkbox>
+      <el-checkbox v-model="skip_filter">跳过筛选</el-checkbox>
     </div>
     <div class="upload-box">
-      <UploadFile :rm_dup="rm_dup" :rm_reply="rm_reply"/>
+      <UploadFile :rm_dup="rm_dup" :rm_reply="rm_reply" :skip_filter="skip_filter"/>
     </div>
   </div>
 </template>
@@ -18,6 +19,7 @@ export default {
     return {
       rm_dup: false,
       rm_reply: false,
+      skip_filter:false,
       phone_file: false,
     };
   },
