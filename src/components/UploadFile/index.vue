@@ -78,6 +78,7 @@ export default {
       formData.append("phone_file", file.file);
       formData.append("rm_dup", this.rm_dup);
       formData.append("rm_reply", this.rm_reply);
+      formData.append("skip_filter", this.skip_filter);
 
       // 调用后端服务器的接口
       // console.log(1, this.rm_dup);
