@@ -86,8 +86,8 @@
       </el-table-column>
       <el-table-column label="操作" fixed="right" align="center" width="100">
         <template slot-scope="scope">
-          <el-button size='mini' type='text' @click='ShowPhone(scope.row, true)'>有效号码</el-button>
-          <el-button size='mini' type='text' @click='ShowPhone(scope.row, false)'>无效号码</el-button>
+          <el-button size='mini' type='text' @click='ShowPhone(scope.row, 1)'>有效号码</el-button>
+          <el-button size='mini' type='text' @click='ShowPhone(scope.row, 2)'>无效号码</el-button>
           <el-button size='mini' type='text' @click='ShowMember(scope.row)'>任务成员</el-button>
           <div class="flex-cb" style="justify-content: space-evenly">
             <el-popconfirm
@@ -189,7 +189,7 @@ export default {
       phone_size: 10,
       phone_list: [],
       phone_total: 0,
-      phone_is_valid: false,
+      phone_is_valid: 0,
       show_phone: false,
       loading_phone: false,
       loading: false,

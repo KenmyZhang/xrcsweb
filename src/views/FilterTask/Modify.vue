@@ -115,7 +115,7 @@ export default {
     },
     async getTaskList() {
       const { data = [] } = await phoneUploadhistory({
-        not_in_filter_task: true,
+        not_in_filter_task:true,
         page: 1,
         page_num: 1000000,
       });
@@ -163,13 +163,13 @@ export default {
         reply_ids: this.form.reply_ids.join(','),
       };
 
-      const { code } = await addFilterTasks(params);
+      const { code, result } = await addFilterTasks(params);
       if (code == 200) {
         this.$message.success("新增成功");
         this.$emit("conform");
         this.close();
       } else {
-        this.$message.error("新增失败," + res.result);
+        this.$message.error(result);
       }
     },
     /**
