@@ -69,6 +69,16 @@
           {{ ((scope.row.process_count / scope.row.total)* 100).toFixed(2) }}%
         </template>
       </el-table-column>
+      <el-table-column prop="is_del" label="是否已删除">
+        <template slot-scope="scope">
+          <el-tag type="info" v-if="scope.row.is_del == 0" size="small"
+            >否</el-tag
+          >
+          <el-tag type="success" v-if="scope.row.is_del == 1" size="small"
+            >是</el-tag
+          >
+        </template>
+      </el-table-column>
       <el-table-column prop="created_time" label="创建日期" width="180px">
         <template slot-scope="scope">
           {{ getTime(scope.row.created_time) }}

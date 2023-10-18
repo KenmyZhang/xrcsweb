@@ -51,6 +51,43 @@
         </template>
       </el-table-column>
 
+      <el-table-column prop="skip_filter" label="是否跳过筛选">
+        <template slot-scope="scope">
+          <el-tag
+            type="warning"
+            size="small"
+            v-if="scope.row.skip_filter === null || scope.row.skip_filter === undefined"
+            >未知</el-tag
+          >
+          <el-tag type="info" v-if="scope.row.skip_filter == false" size="small"
+            >否</el-tag
+          >
+          <el-tag type="success" v-if="scope.row.skip_filter == true" size="small"
+            >是</el-tag
+          >
+        </template>
+      </el-table-column>
+
+
+      <el-table-column prop="upload_finish" label="是否上传完成">
+        <template slot-scope="scope">
+          <el-tag
+            type="warning"
+            size="small"
+            v-if="scope.row.upload_finish === null || scope.row.upload_finish === undefined"
+            >未知</el-tag
+          >
+          <el-tag type="info" v-if="scope.row.upload_finish == false" size="small"
+            >否</el-tag
+          >
+          <el-tag type="success" v-if="scope.row.upload_finish == true" size="small"
+            >是</el-tag
+          >
+        </template>
+      </el-table-column>
+
+
+
       <el-table-column prop="upload_time" label="上传日期">
         <template slot-scope="scope">
           {{ getTime(scope.row.upload_time) }}
