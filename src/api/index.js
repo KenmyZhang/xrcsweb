@@ -60,6 +60,15 @@ export function phoneTaskStop(data) {
   })
 }
 
+export function phoneTaskContinue(data) {
+  return request({
+    url: `/api/v3/phone/task/continue`,
+    method: 'post',
+    data,
+  })
+}
+
+
 
 // 任务列表
 export function phoneTaskList(data) {
@@ -106,6 +115,16 @@ export function delFilterTask(data) {
 export function stopFilterTask(data) {
   return request({
     url: `/api/v3/filter/task/stop`,
+    // method: 'post',
+    // data,
+    method: 'post',
+    data,
+  })
+}
+
+export function continueFilterTask(data) {
+  return request({
+    url: `/api/v3/filter/task/continue`,
     // method: 'post',
     // data,
     method: 'post',

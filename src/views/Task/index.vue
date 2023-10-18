@@ -76,12 +76,21 @@
           <el-button type='text' @click='ShowHi(scope.row)'>打招呼配置</el-button>
           <el-button type="text" @click="$refs.showMemberRef.open(scope.row)">成员信息</el-button>
 
-          <el-popconfirm
+          <el-popconfirm v-if="scope.row.stop ==0" 
               title="确定停止吗？"
               @confirm="stoptTask(scope.row)"
             >
              <el-button type="text" size="mini" slot="reference">
-                停止
+                停止发送
+              </el-button>
+          </el-popconfirm>
+
+          <el-popconfirm v-if="scope.row.stop ==1" 
+              title="确定继续吗？"
+              @confirm="continuetTask(scope.row)"
+            >
+             <el-button type="text" size="mini" slot="reference">
+                继续发送
               </el-button>
           </el-popconfirm>
 
@@ -146,7 +155,7 @@
 <script>
 import Modify from "./Modify.vue";
 import ShowMember from "./ShowMember.vue";
-import { phoneTaskStop, phoneTaskList,delPhoneTask, GetHi, PostSendHi, PostUpdateInterval } from "@/api";
+import { phoneTaskStop, phoneTaskContinue,phoneTaskList,delPhoneTask, GetHi, PostSendHi, PostUpdateInterval } from "@/api";
 import dayjs from "dayjs";
 
 export default {
@@ -264,6 +273,18 @@ export default {
         this.$message.success("停止失败");
       }
     },
+
+    async continuetTask(row) {
+      const { code } = await phoneTaskContinue({ id: row.id });
+      if (code == 200) {
+        this.$message.success("停止成功");
+        this.getList();
+      } else {
+        this.$message.success("停止失败");
+      }
+    },
+
+    
     /**
      * 表格数据获取
      */

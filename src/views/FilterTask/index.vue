@@ -91,11 +91,21 @@
           </div>
           <div class="flex-cb" style="justify-content: space-evenly">
             <el-popconfirm
+              v-if="scope.row.stop ==0" 
               title="确定停止吗？"
               @confirm="handleStop(scope.row)"
             >
               <el-button type="text" size="mini" slot="reference">
-                停止
+                停止筛选
+              </el-button>
+            </el-popconfirm>
+            <el-popconfirm
+              v-if="scope.row.stop ==1" 
+              title="确定继续筛选吗？"
+              @confirm="handleContinue(scope.row)"
+            >
+              <el-button type="text" size="mini" slot="reference">
+                继续筛选
               </el-button>
             </el-popconfirm>
           </div>
@@ -137,7 +147,7 @@
 </template>
 
 <script>
-import { filterTasks, phoneUploadhistory,delFilterTask,stopFilterTask, GetMemberList, GetPhoneList } from "@/api";
+import { filterTasks, phoneUploadhistory,delFilterTask,stopFilterTask,continueFilterTask, GetMemberList, GetPhoneList } from "@/api";
 import dayjs from "dayjs";
 import Modify from "./Modify.vue";
 import { exportExcel } from '@/utils/tools'
@@ -318,6 +328,20 @@ export default {
        this.getList();
        this.getTaskList();
      },
+
+     async handleContinue(row) {
+       const { code } = await continueFilterTask({
+         id: row.id,
+       })
+      if (code == 200) {
+        this.$message.success("继续筛选成功");
+      } else {
+        this.$message.error("继续筛选失败");
+      }
+       this.getList();
+       this.getTaskList();
+     },
+
     /**
      * 多删除
      */
