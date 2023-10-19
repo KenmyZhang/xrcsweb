@@ -45,6 +45,16 @@
             </el-select>
           </el-form-item>
 
+          <el-form-item label="最近多少天内活跃" prop="interval">
+            <el-input-number
+              placeholder="请输入"
+              v-model="form.active_time"
+              :min="0"
+            ></el-input-number>
+            天
+          </el-form-item>
+
+
           <el-form-item label="消息延迟" prop="interval">
             <el-input-number
               placeholder="请输入"
@@ -77,6 +87,7 @@ export default {
         taskId: [{ required: true, message: "请输入", trigger: "blur" }],
         reply_ids: [{ required: true, message: "请输入", trigger: "blur" }],
         interval: [{ required: true, message: "请输入", trigger: "blur" }],
+        active_time: [{ required: true, message: "请输入", trigger: "blur" }],
       },
       show: false,
       form: {},
@@ -101,6 +112,7 @@ export default {
       this.form = {
         taskId: "",
         reply_ids: [],
+        active_time:0,
         interval: 0,
       };
     },
@@ -160,6 +172,7 @@ export default {
       // console.log('this.form.taskId', this.form.taskId);
       const params = {
         interval: this.form.interval,
+        active_time: this.form.active_time,
         filename: task.filename,
         reply_ids: this.form.reply_ids.join(','),
       };

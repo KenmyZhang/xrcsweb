@@ -41,6 +41,7 @@
       <el-table-column prop="id" label="ID" width="55" />
       <el-table-column prop="filename" label="文件名" />
       <el-table-column prop="total" label="总共数量" />
+      <el-table-column prop="active_time" label="最近多少天内活跃" />
       <el-table-column prop="valid_count" label="有效数量" />
       <el-table-column prop="invalid_count" label="无效数量" />
       <el-table-column label="有效占比">
