@@ -45,15 +45,6 @@
             </el-select>
           </el-form-item>
 
-          <el-form-item label="最近多少天内活跃" prop="interval">
-            <el-input-number
-              placeholder="请输入"
-              v-model="form.active_time"
-              :min="0"
-            ></el-input-number>
-            天
-          </el-form-item>
-
 
           <el-form-item label="消息延迟" prop="interval">
             <el-input-number
