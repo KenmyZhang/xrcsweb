@@ -115,6 +115,7 @@ export default {
     },
     async getTaskList() {
       const { data = [] } = await phoneUploadhistory({
+        only_upload_finished: true,
         not_in_filter_task:true,
         page: 1,
         page_num: 1000000,
