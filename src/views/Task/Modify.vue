@@ -16,6 +16,7 @@
               clearable
             >
               <el-option
+                class='file_name_item'
                 :label="item.filename"
                 :value="item.id"
                 v-for="item in taskList"
@@ -193,5 +194,7 @@ export default {
 };
 </script>
 <style lang="stylus" scoped>
-/* @import url(); 引入css类 */
+  .file_name_item
+    width 56vw
+    text-overflow ellipsis
 </style>

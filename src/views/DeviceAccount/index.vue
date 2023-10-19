@@ -22,6 +22,7 @@
       <el-table-column prop="filter_count" label="已筛选号码数量" align="center" />
       <el-table-column prop="assigned_send_count" label="领取发送号码数量" align="center" />
       <el-table-column prop="send_count" label="已发送号码数量" align="center" />
+      <el-table-column prop="remark" label="备注" align="center" />
       <el-table-column prop="status" label="状态" align="center">
         <template slot-scope="scope">
           <el-tag type="info" v-if="scope.row.status == 0" size="small"
@@ -44,6 +45,16 @@
               >使用</el-button
             >
           </div>
+          <div class="flex-cb">
+            <el-button
+              style="margin-left: 8px"
+              type="text"
+              size="mini"
+              @click="$refs.updateRef.open(scope.row)"
+            >
+              编辑
+            </el-button>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -58,15 +69,19 @@
       layout="sizes, prev, pager, next"
       :total="total"
     />
+    <Update ref="updateRef" @conform="getList" />
   </div>
 </template>
 
 <script>
 import { deviceAccounts, useDeviceAccount, addDeviceAccount } from "@/api";
+import Update from './Update'
 
 export default {
+  components:{Update},
   data() {
     return {
+      form: {},
       status: -1,
       tableData: [],
       loading: false,
@@ -122,6 +137,7 @@ export default {
         })
         .catch(() => {});
     },
+
 
     isNumber(val) {
       var regPos = /^\d+(\.\d+)?$/; //非负浮点数
