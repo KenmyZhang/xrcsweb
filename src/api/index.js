@@ -224,6 +224,14 @@ export function updateDeviceAccount(data) {
   })
 }
 
+export function delDeviceAccount(data) {
+  return request({
+    url: `/api/v3/device/account/del`,
+    method: 'post',
+    data,
+  })
+}
+
 export const GetMemberList = params => request({ url: '/api/v3/filter/task/members', params })
 export const GetHi = params => request({ url: '/api/v3/phone/task/reply', params })
 export const GetPhoneList = params => request({ url: '/api/v3/phone/list', params })

@@ -54,6 +54,13 @@
             >
               编辑
             </el-button>
+           </div>
+           <div class="flex-cb">
+            <el-popconfirm title="确定删除吗？" @confirm="hanldeDel(scope.row)">
+              <el-button size="mini" type="text" slot="reference">
+                删除
+              </el-button>
+            </el-popconfirm>
           </div>
         </template>
       </el-table-column>
@@ -74,7 +81,7 @@
 </template>
 
 <script>
-import { deviceAccounts, useDeviceAccount, addDeviceAccount } from "@/api";
+import { deviceAccounts, useDeviceAccount, addDeviceAccount,delDeviceAccount } from "@/api";
 import Update from './Update'
 
 export default {
@@ -103,6 +110,21 @@ export default {
       this.page = page;
       this.getList();
     },
+
+  /**
+     * 单删除
+     */
+    async hanldeDel(row) {
+      const params = { id: row.id };
+      const { code } = await delDeviceAccount(params);
+        if (code == 200) {
+          this.$message.success("操作成功");
+        } else {
+          this.$message.error("操作失败");
+        }
+        this.getList();
+    },
+
     /**
      * 表格数据获取
      */

@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :title="编辑备注"
+    :title="'编辑备注'"
     :visible.sync="show"
     width="70%"
     destroy-on-close
