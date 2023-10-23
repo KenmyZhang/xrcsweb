@@ -32,7 +32,7 @@
     >
       <el-table-column type="selection" width="55"> </el-table-column>
       <el-table-column prop="id" label="ID" width="55" />
-
+      <el-table-column prop="group_name" label="组" width="155" />
       <el-table-column prop="content" label="内容" width="200">
         <template slot-scope="scope">
           <ContentBox :content="scope.row.content" :type="scope.row.type" />

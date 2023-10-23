@@ -12,7 +12,6 @@
           <el-form-item label="类型" prop="type">
             <el-radio-group
               v-model="form.type"
-              :disabled="!!form.id"
               @input="radioChange"
             >
               <el-radio :label="1">文字</el-radio>
@@ -28,7 +27,7 @@
               v-model="form.content"
             ></el-input>
           </el-form-item>
-          
+
           <el-form-item label="内容" prop="content" v-if="form.type == 2">
             <UploadVideo v-model="form.content" />
           </el-form-item>
@@ -39,7 +38,7 @@
             <UploadVideo v-model="form.content" />
           </el-form-item>
 
-          <el-form-item label="组名" prop="group_id" v-if="!form.id">
+          <el-form-item label="组名" prop="group_id">
             <hello-group-modal v-model="form.group_id" />
           </el-form-item>
 
