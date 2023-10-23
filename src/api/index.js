@@ -44,6 +44,18 @@ export function phoneTask(data) {
   })
 }
 
+// 清除告警
+export function clearWarn(data) {
+  return request({
+    url: `/api/v3/phone/task/clear/warn`,
+    method: 'post',
+    data,
+    // method: 'get',
+    // params: data,
+  })
+}
+
+
 export function delPhoneTask(data) {
   return request({
     url: `/api/v3/phone/task/del`,

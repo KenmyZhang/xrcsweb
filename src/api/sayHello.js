@@ -12,6 +12,7 @@ export function add(data) {
     // params: data,
   })
 }
+
 // 查询打招呼配置
 export function get(data) {
   return request({

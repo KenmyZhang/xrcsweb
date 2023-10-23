@@ -229,6 +229,7 @@ import {
   PostSendHi,
   PostUpdateInterval,
   GetChangeHiList,
+  clearWarn
 } from "@/api";
 import dayjs from "dayjs";
 
@@ -367,14 +368,14 @@ export default {
         this.$message.success("停止失败");
       }
     },
-    
+
     async clearNotice(row) {
-      const { code } = await phoneTaskStop({ id: row.id });
+      const { code } = await clearWarn({ app_key: row.app_key });
       if (code == 200) {
-        this.$message.success("停止成功");
+        this.$message.success("清除成功");
         this.getList();
       } else {
-        this.$message.success("停止失败");
+        this.$message.success("清除失败");
       }
     },
 
