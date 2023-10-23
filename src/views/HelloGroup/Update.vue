@@ -7,27 +7,18 @@
   >
     <div style="padding: 0 36px 0 0">
       <el-form ref="form" :model="form" label-width="80px">
-        <el-form-item label="类型" prop="type">
+        <el-form-item label="模式" prop="name">
+          <el-input placeholder="请输入" clearable v-model="form.name"></el-input>
+        </el-form-item>
+        <el-form-item label="模式" prop="mode">
           <el-radio-group
-            v-model="form.type"
+            v-model="form.mode"
             :disabled="!!form.id"
-            @input="radioChange"
           >
-            <el-radio :label="1">文字</el-radio>
-            <el-radio :label="2">音频</el-radio>
+            <el-radio :label="0">随机</el-radio>
+            <el-radio :label="1">组合</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="内容" prop="content" v-if="form.type == 1">
-          <el-input type="textarea" :rows="4" v-model="form.content"></el-input>
-        </el-form-item>
-        <el-form-item label="内容" prop="content" v-if="form.type == 2">
-          <UploadVideo v-model="form.content" />
-        </el-form-item>
-
-        <el-form-item label="组名" prop="group_id" v-if="form.type == 2">
-          <UploadVideo v-model="form.content" />
-        </el-form-item>
-
         <el-form-item label="状态" prop="enable">
           <el-switch
             active-color="#13ce66"
@@ -42,7 +33,7 @@
           <el-button
             type="primary"
             @click="handleSubmit"
-            :disabled="!form.content"
+            :disabled="!form.name"
             >提交</el-button
           >
         </el-form-item>
@@ -52,7 +43,7 @@
 </template>
 
 <script>
-import { get, del, update, add } from "@/api/sayHello";
+import { get, del, update, add } from "@/api/sayHelloGroup";
 import { areaList } from "@/assets/js/area";
 import UploadVideo from "@/components/UploadVideo.vue";
 
@@ -61,24 +52,16 @@ export default {
   data() {
     return {
       show: false,
-      cityOptions: areaList,
-      cityProps: {
-        multiple: true,
-        value: "name",
-        label: "name",
-        children: "city",
-        emitPath: false,
-      },
       form: {
-        type: 1,
-        city: [],
+        mode: 0,
+        name: '',
+        enable: false,
       },
     };
   },
   computed: {},
   created() {
     this.initForm();
-    // this.cityOptions = areaList
   },
   mounted() {},
   methods: {
@@ -87,24 +70,16 @@ export default {
      */
     initForm() {
       this.form = {
-        type: 1,
-        city: [],
+        mode: 0,
+        name: '',
         enable: false,
-        content: "",
       };
     },
     open(form) {
+      console.log(6666);
       this.initForm();
-      this.show = true;
-      const city = (form.city || "")
-        .split(",")
-        .filter((i) => i)
-        .map((i) => {
-          const len = i.length;
-          return i.slice(0, len - 1);
-        });
-      // console.log(889, city);
-      this.form = { ...this.form, ...form, city };
+      this.form = { ...this.form, ...form };
+      this.show = true
     },
     close() {
       this.form = {};
@@ -117,22 +92,11 @@ export default {
         this.handleAdd();
       }
     },
-
-    radioChange(e) {
-      this.form.content = "";
-    },
     /**
      * 新增
      */
     async handleAdd() {
-      const city = this.form.city.map((i) => i + "市").join(",");
-      // console.log(1231, this.form.city);
-      // console.log(
-      //   1232,
-      //   this.form.city.map((i) => i + "市")
-      // );
-      // console.log(1233, city);
-      const { code } = await add({ ...this.form, city });
+      const { code } = await add({ ...this.form });
       if (code == 200) {
         this.$message.success("新增成功");
         this.$emit("conform");
@@ -145,8 +109,7 @@ export default {
      * 编辑
      */
     async handleUpdate() {
-      const city = this.form.city.map((i) => i + "市").join(",");
-      const { code } = await update({ ...this.form, city });
+      const { code } = await update({ ...this.form });
       if (code == 200) {
         this.$message.success("更新成功");
         this.$emit("conform");
@@ -159,5 +122,4 @@ export default {
 };
 </script>
 <style lang="stylus" scoped>
-/* @import url(); 引入css类 */
 </style>

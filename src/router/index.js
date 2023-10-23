@@ -60,6 +60,14 @@ export const nomorlRoutes = {
       }
     },
     {
+      path: "helloGroup",
+      component: () => import("../views/HelloGroup/index.vue"),
+      meta: {
+        title: '打招呼组',
+        icon: 'chat'
+      }
+    },
+    {
       path: "keyword",
       component: () => import("../views/Keyword/index.vue"),
       meta: {
