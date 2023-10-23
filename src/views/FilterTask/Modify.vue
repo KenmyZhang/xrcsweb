@@ -24,7 +24,7 @@
             </el-select>
             <div v-if="form.taskId">文件内总数量：{{ totalTasks }}条</div>
           </el-form-item>
-          <el-form-item label="打招呼内容" prop="group_id">
+          <el-form-item label="打招呼组" prop="group_id">
             <el-select
               class="w100"
               v-model="form.group_id"
