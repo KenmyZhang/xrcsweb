@@ -1,6 +1,7 @@
 <template>
   <div class="public-page">
     <div class="flex-c" style="margin-bottom: 12px">
+      <el-input placeholder="请输入组名" v-model="name" clearable size="small" style="width: 240px;margin-right: 24px"></el-input>
       <el-button
         @click="handelBatchDel"
         class="button"
@@ -36,7 +37,7 @@
       <el-table-column prop="name" label="组名"> </el-table-column>
       <el-table-column prop="mode" label="模式">
         <template slot-scope="scope">
-          {{['随机', '组合'][scope.row.mode]}}
+          {{ ["随机", "组合"][scope.row.mode] }}
         </template>
       </el-table-column>
       <el-table-column prop="enable" label="状态">
@@ -82,6 +83,18 @@
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination
+      class="tr"
+      small
+      hide-on-single-page
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page.sync="page"
+      :page-sizes="[10, 20, 50]"
+      :page-size="page_num"
+      layout="total, prev, pager, next"
+      :total="total"
+    />
     <Update ref="update" @conform="getList" />
   </div>
 </template>
@@ -96,6 +109,10 @@ export default {
   components: { Update, ContentBox },
   data() {
     return {
+      name: "",
+      page: 1,
+      total: 0,
+      page_num: 10,
       tableData: [],
       loading: false,
       multipleSelection: [],
@@ -111,14 +128,27 @@ export default {
   },
   mounted() {},
   methods: {
+        handleSizeChange(page_num) {
+      this.page_num = page_num;
+      this.getList();
+    },
+    handleCurrentChange(page) {
+      this.page = page;
+      this.getList();
+    },
     /**
      * 表格数据获取
      */
     async getList() {
       this.loading = true;
-      const { data = [] } = await get();
+      const { data = [], total } = await get({
+        name: this.name,
+        page: this.page,
+        page_num: this.page_num,
+      });
       this.loading = false;
       this.tableData = data;
+      this.total = total;
     },
     /**
      * 单删除

@@ -70,6 +70,7 @@ export default {
      */
     initForm() {
       this.form = {
+        id: null,
         mode: 0,
         name: '',
         enable: false,
