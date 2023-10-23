@@ -64,6 +64,17 @@
         </template>
       </el-table-column>
 
+      <el-table-column prop="status" label="任务创建状态">
+        <template slot-scope="scope">
+          <el-tag type="info" v-if="scope.row.load_status == 0" size="small"
+            >创建中</el-tag
+          >
+          <el-tag type="success" v-if="scope.row.load_status == 1" size="small"
+            >成功</el-tag
+          >
+        </template>
+      </el-table-column>
+
       <el-table-column prop="created_time" label="创建日期" width="180px">
         <template slot-scope="scope">
           {{ getTime(scope.row.created_time) }}
