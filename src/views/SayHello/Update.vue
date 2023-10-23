@@ -17,6 +17,8 @@
             >
               <el-radio :label="1">文字</el-radio>
               <el-radio :label="2">音频</el-radio>
+              <el-radio :label="3">图片</el-radio>
+              <el-radio :label="4">视频</el-radio>
             </el-radio-group>
           </el-form-item>
           <el-form-item label="内容" prop="content" v-if="form.type == 1">
@@ -28,6 +30,12 @@
           </el-form-item>
           
           <el-form-item label="内容" prop="content" v-if="form.type == 2">
+            <UploadVideo v-model="form.content" />
+          </el-form-item>
+          <el-form-item label="内容" prop="content" v-if="form.type == 3">
+            <UploadVideo v-model="form.content" />
+          </el-form-item>
+          <el-form-item label="内容" prop="content" v-if="form.type == 4">
             <UploadVideo v-model="form.content" />
           </el-form-item>
 
