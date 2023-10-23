@@ -24,22 +24,21 @@
             </el-select>
             <div v-if="form.taskId">文件内总数量：{{ totalTasks }}条</div>
           </el-form-item>
-          <el-form-item label="打招呼内容" prop="reply_ids">
+          <el-form-item label="打招呼内容" prop="group_id">
             <el-select
               class="w100"
-              v-model="form.reply_ids"
+              v-model="form.group_id"
               placeholder="请选择"
-              multiple
               clearable
             >
               <el-option
-                :label="item.content"
+                :label="item.name"
                 :value="item.id"
                 v-for="item in helloContentList"
                 :key="item.id"
               >
                 <audio controls v-if="item.type == 2" style="height: 32px">
-                  <source :src="item.content" />
+                  <source :src="item.name" />
                 </audio>
               </el-option>
             </el-select>
@@ -66,7 +65,7 @@
 
 <script>
 import { addFilterTasks, phoneUploadhistory } from "@/api";
-import { get } from "@/api/sayHello";
+import { get } from "@/api/sayHelloGroup";
 
 export default {
   components: {},
@@ -76,7 +75,7 @@ export default {
       helloContentList: [],
       rules: {
         taskId: [{ required: true, message: "请输入", trigger: "blur" }],
-        reply_ids: [{ required: true, message: "请输入", trigger: "blur" }],
+        group_id: [{ required: true, message: "请输入", trigger: "blur" }],
         interval: [{ required: true, message: "请输入", trigger: "blur" }],
         active_time: [{ required: true, message: "请输入", trigger: "blur" }],
       },
@@ -102,7 +101,7 @@ export default {
     initForm() {
       this.form = {
         taskId: "",
-        reply_ids: [],
+        group_id: [],
         active_time:0,
         interval: 0,
       };
@@ -155,7 +154,7 @@ export default {
      */
     async handleAdd() {
       // const arr = this.helloContentList.filter(v=>{
-      //   return this.form.reply_ids.some(id=> v.id == id)
+      //   return this.form.group_id.some(id=> v.id == id)
       // })
       // const reply_contents = arr.map(v=>v.content).join(',')
 
@@ -165,7 +164,7 @@ export default {
         interval: this.form.interval,
         active_time: this.form.active_time,
         filename: task.filename,
-        reply_ids: this.form.reply_ids.join(','),
+        reply_group_id: this.form.group_id,
       };
 
       const { code, result } = await addFilterTasks(params);

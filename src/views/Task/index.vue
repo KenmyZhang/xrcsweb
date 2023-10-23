@@ -49,6 +49,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="filename" label="文件名" />
+      <el-table-column prop="group_name" label="打招呼组名" width="95" />
       <el-table-column prop="interval" label="消息延迟" />
       <el-table-column prop="total" label="任务总数" />
       <el-table-column prop="process_count" label="已发送数" />

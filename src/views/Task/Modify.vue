@@ -25,22 +25,21 @@
             </el-select>
             <div v-if="form.taskId">文件内总数量：{{ totalTasks }}条</div>
           </el-form-item>
-          <el-form-item label="打招呼内容" prop="reply_ids">
+          <el-form-item label="打招呼组" prop="group_id">
             <el-select
               class="w100"
-              v-model="form.reply_ids"
+              v-model="form.group_id"
               placeholder="请选择"
-              multiple
               clearable
             >
               <el-option
-                :label="item.content"
+                :label="item.name"
                 :value="item.id"
                 v-for="item in helloContentList"
                 :key="item.id"
               >
                 <audio controls v-if="item.type == 2" style="height: 32px">
-                  <source :src="item.content" />
+                  <source :src="item.name" />
                 </audio>
               </el-option>
             </el-select>
@@ -66,7 +65,7 @@
 
 <script>
 import { phoneTask, phoneTaskFiles } from "@/api";
-import { get } from "@/api/sayHello";
+import { get } from "@/api/sayHelloGroup";
 
 export default {
   components: {},
@@ -76,7 +75,7 @@ export default {
       helloContentList: [],
       rules: {
         taskId: [{ required: true, message: "请输入", trigger: "blur" }],
-        reply_ids: [{ required: true, message: "请输入", trigger: "blur" }],
+        group_id: [{ required: true, message: "请输入", trigger: "blur" }],
         interval: [{ required: true, message: "请输入", trigger: "blur" }],
       },
       show: false,
@@ -101,6 +100,7 @@ export default {
         page_num: 1000000,
         valid: true,
       });
+      console.log(data)
       // const arr = data.map(v=>v.content)
       // this.helloContentList = Array.from(new Set(arr));
       this.helloContentList = data;
@@ -128,7 +128,7 @@ export default {
     initForm() {
       this.form = {
         taskId: "",
-        reply_ids: [],
+        group_id: [],
         interval: 0,
       };
     },
@@ -159,13 +159,13 @@ export default {
      * 新增
      */
     async handleAdd() {
-      // const obj = this.helloContentList.find((v) => v.id == this.form.reply_ids);
+      // const obj = this.helloContentList.find((v) => v.id == this.form.group_id);
       const task = this.taskList.find((v) => v.id == this.form.taskId);
 
       const params = {
         interval: this.form.interval,
         filename: task.filename,
-        reply_ids: this.form.reply_ids.join(","),
+        reply_group_id: this.form.group_id,
         // reply_content: obj.content,
       };
       const { code } = await phoneTask(params);
