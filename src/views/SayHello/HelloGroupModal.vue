@@ -123,6 +123,7 @@ export default {
       console.log(12, row);
       this.info = row;
       this.$emit("input", row.id);
+      this.$emit("confirm", row);
       this.close();
     },
     /**

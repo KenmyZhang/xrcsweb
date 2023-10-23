@@ -92,7 +92,11 @@
             title="确定删除吗？"
             @confirm="handleRemove(scope.row)"
           >
-            <el-button type="text" style="margin-left: 10px; margin-right: 10px" slot="reference">
+            <el-button
+              type="text"
+              style="margin-left: 10px; margin-right: 10px"
+              slot="reference"
+            >
               删除
             </el-button>
           </el-popconfirm>
@@ -131,8 +135,6 @@
               清除告警
             </el-button>
           </el-popconfirm>
-
-          
         </template>
       </el-table-column>
     </el-table>
@@ -150,10 +152,22 @@
     <modify ref="modifyRef" @conform="getList" />
     <ShowMember ref="showMemberRef" @conform="getList" />
     <el-dialog title="打招呼配置" width="70%" :visible.sync="show_hi">
-      <div style="text-align: right">
-        <el-button size="small" type="primary" @click="ShowChangeHi"
-          >修改打招呼</el-button
-        >
+      <div class="flex">
+        <div class="flex1"></div>
+        <div class="flex-cc">
+          <div v-if="groupInfo.id">组名：{{ groupInfo.name }}</div>
+          <div v-if="groupInfo.id" style="margin: 0 12px">
+            组ID：{{ groupInfo.id }}
+          </div>
+          <el-button
+            size="small"
+            type="primary"
+            @click="$refs.helloGroupModalRef.open()"
+          >
+            <!-- <el-button size="small" type="primary" @click="ShowChangeHi"> -->
+            修改打招呼
+          </el-button>
+        </div>
       </div>
       <el-table class="table" :data="hi_list">
         <el-table-column label="编号" prop="id" />
@@ -175,17 +189,18 @@
       </el-table>
     </el-dialog>
     <el-dialog title="修改打招呼" width="70%" :visible.sync="show_change">
-      <el-table class="table" :data="change_list" @selection-change="ChangeSel">
+      <el-table
+        class="table"
+        :data="change_list"
+        @selection-change="ChangeSel"
+        style="max-height: 500px"
+      >
         <el-table-column type="selection" width="60" />
-        <el-table-column label="编号" prop="id" />
+        <el-table-column label="编号" prop="id" width="70" />
+        <el-table-column label="组名" prop="group_name" width="140" />
         <el-table-column label="内容" prop="content">
           <template slot-scope="scope">
-            <audio
-              controls
-              :src="scope.row.content"
-              v-if="scope.row.type === 2"
-            />
-            <span v-else>{{ scope.row.content }}</span>
+            <ContentBox :content="scope.row.content" :type="scope.row.type" />
           </template>
         </el-table-column>
       </el-table>
@@ -214,12 +229,16 @@
         <el-button type="primary" @click="SubmitEdit">提交</el-button>
       </div>
     </el-dialog>
+    <HelloGroupModal ref="helloGroupModalRef" @confirm="selectGroupInfo" />
   </div>
 </template>
 
 <script>
 import Modify from "./Modify.vue";
 import ShowMember from "./ShowMember.vue";
+import ContentBox from "@/components/ContentBox";
+import HelloGroupModal from "../SayHello/HelloGroupModal.vue";
+
 import {
   phoneTaskStop,
   phoneTaskContinue,
@@ -229,12 +248,12 @@ import {
   PostSendHi,
   PostUpdateInterval,
   GetChangeHiList,
-  clearWarn
+  clearWarn,
 } from "@/api";
 import dayjs from "dayjs";
 
 export default {
-  components: { Modify, ShowMember },
+  components: { Modify, ShowMember, ContentBox, HelloGroupModal },
   data() {
     return {
       handle_status: "0",
@@ -264,6 +283,7 @@ export default {
       show_change: false,
       loading: false,
       // multipleSelection: [],
+      groupInfo: {},
     };
   },
   computed: {
@@ -278,6 +298,11 @@ export default {
     ShowEdit(item) {
       this.form_edit = item;
       this.show_edit = true;
+    },
+    selectGroupInfo(info = {}) {
+      this.groupInfo = info;
+      console.log("this.groupInfo", this.groupInfo);
+      this.SubmitSendHi()
     },
     SubmitEdit() {
       this.$refs.form_edit.validate((valid) => {
@@ -310,7 +335,15 @@ export default {
       this.SubmitSendHi(this.select_list.map((i) => i.id));
     },
     SubmitSendHi(list) {
-      PostSendHi({ id: this.hi_id, reply_ids: list.join(",") }).then((res) => {
+      if (!this.groupInfo.id) {
+        this.$message.error("请先选择组~");
+        return;
+      }
+      PostSendHi({
+        id: this.hi_id,
+        group_id: this.groupInfo.id,
+        //  reply_ids: list.join(",")
+      }).then((res) => {
         if (res.msg === "ok") {
           this.$message({ type: "success", message: "打招呼成功" });
           this.show_change = false;
@@ -324,6 +357,8 @@ export default {
     },
     ShowHi(item) {
       this.hi_id = item.id;
+      this.$refs.helloGroupModalRef.open()
+      return
       GetHi({ task_id: item.id }).then((res) => {
         this.hi_list = res.data || [];
         this.show_hi = true;
