@@ -79,6 +79,7 @@ export default {
       }
       this.loading = false;
     },
+    
     onSuccess(a, file, fileList) {
       fileList.forEach((item) => {
         item.status = item.raw.status;

@@ -7,6 +7,7 @@ export function upload(data) {
   return request({
     url: `/api/v3/image/upload`,
     method: 'post',
+    headers: { 'Content-Type': 'multipart/form-data' },
     data,
   })
 }

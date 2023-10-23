@@ -5,7 +5,6 @@
       width="50%"
       append-to-body
       destroy-on-close
-      style="z-index: 22222222"
     >
       <div style="padding: 0 36px 0 0">
         <div>
@@ -73,9 +72,10 @@
       </div>
     </el-dialog>
 
-    <el-button size="small" @click="open">{{
-      info.name || "请选择"
-    }}</el-button>
+    <el-button size="small" @click="open">
+      <div v-if="info.id">{{info.name}} - {{info.id}}</div>
+      <div v-else>请选择</div>
+    </el-button>
   </div>
 </template>
 
@@ -83,7 +83,7 @@
 import { get, del, update, add } from "@/api/sayHelloGroup";
 
 export default {
-  props: ["value"],
+  props: ["value", "groupName"],
   components: {},
   data() {
     return {
@@ -98,7 +98,7 @@ export default {
   },
   computed: {},
   created() {
-    this.info = { id: this.value, name: this.value };
+    this.info = { id: this.value, name: this.groupName };
   },
   mounted() {},
   methods: {
@@ -111,7 +111,8 @@ export default {
       this.getList();
     },
     async open(info) {
-      this.info = info;
+      console.log(1223, this.value, this.groupName);
+      // this.info = info;
       await this.getList();
       this.show = true;
     },
@@ -132,6 +133,7 @@ export default {
         page: this.page,
         page_num: this.page_num,
         name: this.name,
+        valid: true,
       });
       this.tableData = data;
       this.total = total;

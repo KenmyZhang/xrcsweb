@@ -20,7 +20,7 @@
               <el-radio :label="4">视频</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="内容" prop="content" v-if="form.type == 1">
+          <el-form-item label="文字内容" prop="content" v-if="form.type == 1">
             <el-input
               type="textarea"
               :rows="4"
@@ -28,18 +28,18 @@
             ></el-input>
           </el-form-item>
 
-          <el-form-item label="内容" prop="content" v-if="form.type == 2">
+          <el-form-item label="语音内容" prop="content" v-if="form.type == 2">
             <UploadVideo v-model="form.content" />
           </el-form-item>
-          <el-form-item label="内容" prop="content" v-if="form.type == 3">
-            <UploadVideo v-model="form.content" />
+          <el-form-item label="图片内容" prop="content" v-if="form.type == 3">
+            <UploadImg v-model="form.content"/>
           </el-form-item>
-          <el-form-item label="内容" prop="content" v-if="form.type == 4">
+          <el-form-item label="视频内容" prop="content" v-if="form.type == 4">
             <UploadVideo v-model="form.content" />
           </el-form-item>
 
-          <el-form-item label="组名" prop="group_id">
-            <hello-group-modal v-model="form.group_id" />
+          <el-form-item label="组名" prop="group_id" v-if="show">
+            <hello-group-modal v-model="form.group_id" :groupName='form.group_name'/>
           </el-form-item>
 
           <el-form-item label="状态" prop="enable">
@@ -70,10 +70,11 @@
 import { get, del, update, add } from "@/api/sayHello";
 import { areaList } from "@/assets/js/area";
 import UploadVideo from "@/components/UploadVideo.vue";
+import UploadImg from "@/components/UploadImg";
 import HelloGroupModal from "./HelloGroupModal";
 
 export default {
-  components: { UploadVideo, HelloGroupModal },
+  components: { UploadVideo, HelloGroupModal, UploadImg },
   data() {
     return {
       show: false,
@@ -107,6 +108,8 @@ export default {
         city: [],
         enable: false,
         content: "",
+        group_name: "",
+        group_id: "",
       };
     },
     open(form) {
@@ -119,8 +122,8 @@ export default {
           const len = i.length;
           return i.slice(0, len - 1);
         });
-      // console.log(889, city);
       this.form = { ...this.form, ...form, city };
+      console.log(889,  this.form);
     },
     close() {
       this.form = {};

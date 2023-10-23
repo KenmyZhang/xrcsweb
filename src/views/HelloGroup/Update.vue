@@ -7,13 +7,15 @@
   >
     <div style="padding: 0 36px 0 0">
       <el-form ref="form" :model="form" label-width="80px">
-        <el-form-item label="模式" prop="name">
-          <el-input placeholder="请输入" clearable v-model="form.name"></el-input>
+        <el-form-item label="组名" prop="name">
+          <el-input
+            placeholder="请输入"
+            clearable
+            v-model="form.name"
+          ></el-input>
         </el-form-item>
         <el-form-item label="模式" prop="mode">
-          <el-radio-group
-            v-model="form.mode"
-          >
+          <el-radio-group v-model="form.mode">
             <el-radio :label="0">随机</el-radio>
             <el-radio :label="1">组合</el-radio>
           </el-radio-group>
@@ -29,10 +31,7 @@
           </el-switch>
         </el-form-item>
         <el-form-item>
-          <el-button
-            type="primary"
-            @click="handleSubmit"
-            :disabled="!form.name"
+          <el-button type="primary" @click="handleSubmit" :disabled="!form.name"
             >提交</el-button
           >
         </el-form-item>
@@ -43,7 +42,6 @@
 
 <script>
 import { get, del, update, add } from "@/api/sayHelloGroup";
-import { areaList } from "@/assets/js/area";
 import UploadVideo from "@/components/UploadVideo.vue";
 
 export default {
@@ -53,7 +51,7 @@ export default {
       show: false,
       form: {
         mode: 0,
-        name: '',
+        name: "",
         enable: false,
       },
     };
@@ -71,7 +69,7 @@ export default {
       this.form = {
         id: null,
         mode: 0,
-        name: '',
+        name: "",
         enable: false,
       };
     },
@@ -79,7 +77,7 @@ export default {
       console.log(6666);
       this.initForm();
       this.form = { ...this.form, ...form };
-      this.show = true
+      this.show = true;
     },
     close() {
       this.form = {};
@@ -121,5 +119,4 @@ export default {
   },
 };
 </script>
-<style lang="stylus" scoped>
-</style>
+<style lang="stylus" scoped></style>
