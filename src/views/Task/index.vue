@@ -9,7 +9,11 @@
         </el-select>
       </el-form-item>
       <el-form-item label="领取状态">
-        <el-select v-model="formValues.assign_status" placeholder="状态" clearable>
+        <el-select
+          v-model="formValues.assign_status"
+          placeholder="状态"
+          clearable
+        >
           <el-option label="全部" :value="-1"></el-option>
           <el-option label="可领取" :value="0"></el-option>
           <el-option label="不可领取" :value="1"></el-option>
@@ -81,37 +85,54 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" width="200" fixed="right">
+      <el-table-column label="操作" width="240" fixed="right" align="center">
         <template slot-scope="scope">
-          <el-button type='text' @click='ShowEdit(scope.row)'>编辑</el-button>
-          <el-button type='text' @click='ShowHi(scope.row)'>打招呼配置</el-button>
-          <br>
-          <el-button type="text" @click="$refs.showMemberRef.open(scope.row)">成员信息</el-button>
-          <el-popconfirm v-if="scope.row.stop ==0"
-              title="确定停止吗？"
-              @confirm="stoptTask(scope.row)"
-            >
-             <el-button type="text" style='margin-left: 10px;' slot="reference">
-                停止发送
-              </el-button>
+          <el-button type="text" @click="ShowEdit(scope.row)">编辑</el-button>
+          <el-popconfirm
+            title="确定删除吗？"
+            @confirm="handleRemove(scope.row)"
+          >
+            <el-button type="text" style="margin-left: 10px; margin-right: 10px" slot="reference">
+              删除
+            </el-button>
           </el-popconfirm>
-          <el-popconfirm v-if="scope.row.stop ==1"
-              title="确定继续吗？"
-              @confirm="continuetTask(scope.row)"
-            >
-             <el-button type="text" style='margin-left: 10px;' slot="reference">
-                继续发送
-              </el-button>
+          <el-button type="text" @click="ShowHi(scope.row)"
+            >打招呼配置</el-button
+          >
+          <br />
+          <el-button type="text" @click="$refs.showMemberRef.open(scope.row)"
+            >成员信息</el-button
+          >
+          <el-popconfirm
+            v-if="scope.row.stop == 0"
+            title="确定停止吗？"
+            @confirm="stoptTask(scope.row)"
+          >
+            <el-button type="text" style="margin-left: 10px" slot="reference">
+              停止发送
+            </el-button>
           </el-popconfirm>
 
           <el-popconfirm
-              title="确定删除吗？"
-              @confirm="handleRemove(scope.row)"
-            >
-              <el-button type="text" style='margin-left: 10px;' slot="reference">
-                删除
-              </el-button>
-        </el-popconfirm>
+            v-if="scope.row.stop == 1"
+            title="确定继续吗？"
+            @confirm="continuetTask(scope.row)"
+          >
+            <el-button type="text" style="margin-left: 10px" slot="reference">
+              继续发送
+            </el-button>
+          </el-popconfirm>
+
+          <el-popconfirm
+            title="确定清除告警吗？"
+            @confirm="clearNotice(scope.row)"
+          >
+            <el-button type="text" style="margin-left: 10px" slot="reference">
+              清除告警
+            </el-button>
+          </el-popconfirm>
+
+          
         </template>
       </el-table-column>
     </el-table>
@@ -128,49 +149,69 @@
     />
     <modify ref="modifyRef" @conform="getList" />
     <ShowMember ref="showMemberRef" @conform="getList" />
-    <el-dialog title='打招呼配置' width='70%' :visible.sync='show_hi'>
-      <div style='text-align: right;'>
-        <el-button size='small' type='primary' @click='ShowChangeHi'>修改打招呼</el-button>
+    <el-dialog title="打招呼配置" width="70%" :visible.sync="show_hi">
+      <div style="text-align: right">
+        <el-button size="small" type="primary" @click="ShowChangeHi"
+          >修改打招呼</el-button
+        >
       </div>
-      <el-table class='table' :data='hi_list'>
-        <el-table-column label='编号' prop='id' />
-        <el-table-column label='内容' prop='content'>
-          <template slot-scope='scope'>
-            <audio controls :src='scope.row.content' v-if='scope.row.type === 2' />
-            <span v-else>{{scope.row.content}}</span>
+      <el-table class="table" :data="hi_list">
+        <el-table-column label="编号" prop="id" />
+        <el-table-column label="内容" prop="content">
+          <template slot-scope="scope">
+            <audio
+              controls
+              :src="scope.row.content"
+              v-if="scope.row.type === 2"
+            />
+            <span v-else>{{ scope.row.content }}</span>
           </template>
         </el-table-column>
-        <el-table-column label='操作' prop='handle'>
-          <template slot-scope='scope'>
-            <el-button type='text' @click='SendHi(scope.row)'>打招呼</el-button>
+        <el-table-column label="操作" prop="handle">
+          <template slot-scope="scope">
+            <el-button type="text" @click="SendHi(scope.row)">打招呼</el-button>
           </template>
         </el-table-column>
       </el-table>
     </el-dialog>
-    <el-dialog title='修改打招呼' width='70%' :visible.sync='show_change'>
-      <el-table class='table' :data='change_list' @selection-change='ChangeSel'>
-        <el-table-column type='selection' width='60' />
-        <el-table-column label='编号' prop='id' />
-        <el-table-column label='内容' prop='content'>
-          <template slot-scope='scope'>
-            <audio controls :src='scope.row.content' v-if='scope.row.type === 2' />
-            <span v-else>{{scope.row.content}}</span>
+    <el-dialog title="修改打招呼" width="70%" :visible.sync="show_change">
+      <el-table class="table" :data="change_list" @selection-change="ChangeSel">
+        <el-table-column type="selection" width="60" />
+        <el-table-column label="编号" prop="id" />
+        <el-table-column label="内容" prop="content">
+          <template slot-scope="scope">
+            <audio
+              controls
+              :src="scope.row.content"
+              v-if="scope.row.type === 2"
+            />
+            <span v-else>{{ scope.row.content }}</span>
           </template>
         </el-table-column>
       </el-table>
-      <div style='text-align: right;'>
-        <el-button type='primary' @click='SubmitChange'>提交</el-button>
+      <div style="text-align: right">
+        <el-button type="primary" @click="SubmitChange">提交</el-button>
       </div>
     </el-dialog>
-    <el-dialog destroy-on-close title='编辑' width='500px' :visible.sync='show_edit'>
-      <el-form label-width='100px' :model='form_edit' :rules='rule_edit' ref='form_edit'>
-        <el-form-item label='消息延迟' prop='interval'>
-          <el-input-number :min='0' v-model='form_edit.interval' />
-          <span style='margin-left: 10px;'>秒</span>
+    <el-dialog
+      destroy-on-close
+      title="编辑"
+      width="500px"
+      :visible.sync="show_edit"
+    >
+      <el-form
+        label-width="100px"
+        :model="form_edit"
+        :rules="rule_edit"
+        ref="form_edit"
+      >
+        <el-form-item label="消息延迟" prop="interval">
+          <el-input-number :min="0" v-model="form_edit.interval" />
+          <span style="margin-left: 10px">秒</span>
         </el-form-item>
       </el-form>
-      <div style='text-align: right;'>
-        <el-button type='primary' @click='SubmitEdit'>提交</el-button>
+      <div style="text-align: right">
+        <el-button type="primary" @click="SubmitEdit">提交</el-button>
       </div>
     </el-dialog>
   </div>
@@ -179,7 +220,16 @@
 <script>
 import Modify from "./Modify.vue";
 import ShowMember from "./ShowMember.vue";
-import { phoneTaskStop, phoneTaskContinue, phoneTaskList,delPhoneTask, GetHi, PostSendHi, PostUpdateInterval, GetChangeHiList } from "@/api";
+import {
+  phoneTaskStop,
+  phoneTaskContinue,
+  phoneTaskList,
+  delPhoneTask,
+  GetHi,
+  PostSendHi,
+  PostUpdateInterval,
+  GetChangeHiList,
+} from "@/api";
 import dayjs from "dayjs";
 
 export default {
@@ -198,9 +248,15 @@ export default {
       hi_list: [],
       select_list: [],
       show_hi: false,
-      form_edit: '',
+      form_edit: "",
       rule_edit: {
-        interval: [{ required: true, message: '请输入消息延迟', trigger: ['blur', 'input'] }]
+        interval: [
+          {
+            required: true,
+            message: "请输入消息延迟",
+            trigger: ["blur", "input"],
+          },
+        ],
       },
       show_edit: false,
       change_list: [],
@@ -219,55 +275,58 @@ export default {
   },
   methods: {
     ShowEdit(item) {
-      this.form_edit = item
-      this.show_edit = true
+      this.form_edit = item;
+      this.show_edit = true;
     },
     SubmitEdit() {
-      this.$refs.form_edit.validate(valid => {
-        if (!valid) return
-        PostUpdateInterval({ id: this.form_edit.id, interval: this.form_edit.interval }).then(res => {
-          if (res.msg === 'ok') {
-            this.show_edit = false
-            this.page = 1
-            this.getList()
+      this.$refs.form_edit.validate((valid) => {
+        if (!valid) return;
+        PostUpdateInterval({
+          id: this.form_edit.id,
+          interval: this.form_edit.interval,
+        }).then((res) => {
+          if (res.msg === "ok") {
+            this.show_edit = false;
+            this.page = 1;
+            this.getList();
           } else {
-            this.$message({ type: 'warning', message: res.msg })
+            this.$message({ type: "warning", message: res.msg });
           }
-        })
-      })
+        });
+      });
     },
     SendHi(item) {
-      this.SubmitSendHi([item.id])
+      this.SubmitSendHi([item.id]);
     },
     ShowChangeHi() {
-      GetChangeHiList().then(res => {
-        this.change_list = res.data
-        this.select_list = []
-        this.show_change = true
-      })
+      GetChangeHiList().then((res) => {
+        this.change_list = res.data;
+        this.select_list = [];
+        this.show_change = true;
+      });
     },
     SubmitChange() {
-      this.SubmitSendHi(this.select_list.map(i => i.id))
+      this.SubmitSendHi(this.select_list.map((i) => i.id));
     },
     SubmitSendHi(list) {
-      PostSendHi({ id: this.hi_id, reply_ids: list.join(',') }).then(res => {
-        if (res.msg === 'ok') {
-          this.$message({ type: 'success', message: '打招呼成功' })
-          this.show_change = false
+      PostSendHi({ id: this.hi_id, reply_ids: list.join(",") }).then((res) => {
+        if (res.msg === "ok") {
+          this.$message({ type: "success", message: "打招呼成功" });
+          this.show_change = false;
         } else {
-          this.$message({ type: 'warning', message: res.msg })
+          this.$message({ type: "warning", message: res.msg });
         }
-      })
+      });
     },
     ChangeSel(list) {
-      this.select_list = list
+      this.select_list = list;
     },
     ShowHi(item) {
-      this.hi_id = item.id
-      GetHi({ task_id: item.id }).then(res => {
-        this.hi_list = res.data || []
-        this.show_hi = true
-      })
+      this.hi_id = item.id;
+      GetHi({ task_id: item.id }).then((res) => {
+        this.hi_list = res.data || [];
+        this.show_hi = true;
+      });
     },
     handleClick(tab, event) {
       this.getList();
@@ -308,16 +367,26 @@ export default {
         this.$message.success("停止失败");
       }
     },
+    
+    async clearNotice(row) {
+      const { code } = await phoneTaskStop({ id: row.id });
+      if (code == 200) {
+        this.$message.success("停止成功");
+        this.getList();
+      } else {
+        this.$message.success("停止失败");
+      }
+    },
 
-   async continuetTask(row) {
-     const { code } = await phoneTaskContinue({ id: row.id });
-     if (code == 200) {
-       this.$message.success("停止成功");
-       this.getList();
-     } else {
-       this.$message.success("停止失败");
-     }
-   },
+    async continuetTask(row) {
+      const { code } = await phoneTaskContinue({ id: row.id });
+      if (code == 200) {
+        this.$message.success("停止成功");
+        this.getList();
+      } else {
+        this.$message.success("停止失败");
+      }
+    },
 
     /**
      * 表格数据获取
@@ -338,18 +407,18 @@ export default {
     /**
      * 单删除
      */
-     async handleRemove(row) {
-       const { code } = await delPhoneTask({
-         id: row.id,
-       });
+    async handleRemove(row) {
+      const { code } = await delPhoneTask({
+        id: row.id,
+      });
       if (code == 200) {
         this.$message.success("删除成功");
         this.getTableData();
       } else {
         this.$message.error("删除失败");
       }
-       this.getList();
-     },
+      this.getList();
+    },
     /**
      * 多删除
      */
@@ -383,5 +452,4 @@ export default {
   },
 };
 </script>
-<style lang="stylus" scoped>
-</style>
+<style lang="stylus" scoped></style>
