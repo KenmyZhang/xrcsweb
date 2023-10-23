@@ -13,7 +13,6 @@
         <el-form-item label="模式" prop="mode">
           <el-radio-group
             v-model="form.mode"
-            :disabled="!!form.id"
           >
             <el-radio :label="0">随机</el-radio>
             <el-radio :label="1">组合</el-radio>
