@@ -22,6 +22,11 @@
       <el-table-column prop="filter_count" label="已筛选号码数量" align="center" />
       <el-table-column prop="assigned_send_count" label="领取发送号码数量" align="center" />
       <el-table-column prop="send_count" label="已发送号码数量" align="center" />
+      <el-table-column prop="stop_num" label="发送多少数量后暂停" align="center" />
+      <el-table-column prop="stop_interval" label="暂停秒数" align="center" />
+      <el-table-column prop="double_check_num" label="双钩数量" align="center" />
+      <el-table-column prop="double_check_interval" label="待检查双钩秒数" align="center" />
+      <el-table-column prop="check_phone" label="检测手机号" align="center" />
       <el-table-column prop="remark" label="备注" align="center" />
       <el-table-column prop="status" label="状态" align="center">
         <template slot-scope="scope">
