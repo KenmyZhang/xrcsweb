@@ -277,3 +277,11 @@ export function taskphoneslist(data) {
     params: data,
   })
 }
+// 任务配置
+export function taskmemberset(data) {
+  return request({
+    url: `/api/v3/phone/task/member/set`,
+    method: 'post',
+    data,
+  })
+}

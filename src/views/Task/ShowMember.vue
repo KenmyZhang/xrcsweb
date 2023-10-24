@@ -3,6 +3,7 @@
     <el-dialog
       :visible.sync="show"
       width="90%"
+      append-to-body
       destroy-on-close
       title="成员信息列表"
     >
@@ -16,8 +17,13 @@
             {{ getTime(scope.row.create_time) }}
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="50" align="center" fixed="right">
+        <el-table-column label="操作" width="100" align="center" fixed="right">
           <template slot-scope="scope">
+            <el-button
+              type="text"
+              @click="onClickSettings(scope.row)"
+              >配置</el-button
+            >
             <el-button
               type="text"
               @click="$refs.showMemberPhomeRef.open(scope.row)"
@@ -44,6 +50,7 @@
       </span>
     </el-dialog>
     <ShowMemberPhome ref="showMemberPhomeRef" />
+    <TaskSettings ref="taskSettingsRef" />
   </div>
 </template>
 
@@ -51,9 +58,10 @@
 import { taskmember } from "@/api";
 import dayjs from "dayjs";
 import ShowMemberPhome from "./ShowMemberPhome.vue";
+import TaskSettings from "./TaskSettings.vue";
 
 export default {
-  components: { ShowMemberPhome },
+  components: { ShowMemberPhome, TaskSettings },
   data() {
     return {
       tableData: [],
@@ -78,6 +86,11 @@ export default {
       this.task_id = id;
       await this.getList();
       this.show = true;
+    },
+    onClickSettings(row){
+      console.log(23, row);
+      // taskmemberset({})
+      this.$refs.taskSettingsRef.open(row)
     },
     close() {
       this.show = false;
