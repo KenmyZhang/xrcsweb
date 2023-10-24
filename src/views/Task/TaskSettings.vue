@@ -42,7 +42,7 @@
             placeholder="请输入"
           ></el-input-number>
         </el-form-item>
-        <el-form-item label="电话" prop="phone">
+        <el-form-item label="检测手机号" prop="phone">
           <el-input
             v-model="formValues.phone"
             style="width: 240px"
