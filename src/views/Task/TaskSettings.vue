@@ -14,7 +14,7 @@
         :rules="rules"
         label-width="150px"
       >
-        <el-form-item label="暂停数量" prop="stop_num">
+        <el-form-item label="发送多少数量后暂停" prop="stop_num">
           <el-input-number
             style="width: 240px"
             v-model="formValues.stop_num"

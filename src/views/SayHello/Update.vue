@@ -15,9 +15,10 @@
               <el-radio :label="2">音频</el-radio>
               <el-radio :label="3">图片</el-radio>
               <el-radio :label="4">视频</el-radio>
+              <el-radio :label="5">表情</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="文字内容" prop="content" v-if="form.type == 1">
+          <el-form-item label="文字内容" prop="content" v-if="form.type == 1 || form.type == 5">
             <el-input
               type="textarea"
               :rows="4"

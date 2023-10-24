@@ -11,7 +11,12 @@
         <el-table-column prop="id" label="ID" width="55" align="center" />
         <el-table-column prop="task_id" label="任务ID" align="center" />
         <el-table-column prop="account" label="账号" align="center" />
-        <el-table-column prop="count" label="数量" align="center" />
+        <el-table-column prop="count" label="任务数量" align="center" />
+        <el-table-column prop="stop_num" label="发送多少数量后暂停" align="center" />
+        <el-table-column prop="stop_interval" label="暂停秒数" align="center" />
+        <el-table-column prop="double_check_num" label="双钩数量" align="center" />
+        <el-table-column prop="double_check_interval" label="待检查双钩秒数" align="center" />
+        <el-table-column prop="phone" label="电话" align="center" />
         <el-table-column prop="create_time" label="创建时间">
           <template slot-scope="scope">
             {{ getTime(scope.row.create_time) }}
