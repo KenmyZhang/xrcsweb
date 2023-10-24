@@ -18,14 +18,42 @@
     <el-table :data="tableData" class="table" :loading="loading">
       <el-table-column prop="id" label="ID" width="55" />
       <el-table-column prop="account" label="账号" align="center" />
-      <el-table-column prop="assigned_filter_count" label="领取筛选号码数量" align="center" />
-      <el-table-column prop="filter_count" label="已筛选号码数量" align="center" />
-      <el-table-column prop="assigned_send_count" label="领取发送号码数量" align="center" />
-      <el-table-column prop="send_count" label="已发送号码数量" align="center" />
-      <el-table-column prop="stop_num" label="发送多少数量后暂停" align="center" />
+      <el-table-column
+        prop="assigned_filter_count"
+        label="领取筛选号码数量"
+        align="center"
+      />
+      <el-table-column
+        prop="filter_count"
+        label="已筛选号码数量"
+        align="center"
+      />
+      <el-table-column
+        prop="assigned_send_count"
+        label="领取发送号码数量"
+        align="center"
+      />
+      <el-table-column
+        prop="send_count"
+        label="已发送号码数量"
+        align="center"
+      />
+      <el-table-column
+        prop="stop_num"
+        label="发送多少数量后暂停"
+        align="center"
+      />
       <el-table-column prop="stop_interval" label="暂停秒数" align="center" />
-      <el-table-column prop="double_check_num" label="双钩数量" align="center" />
-      <el-table-column prop="double_check_interval" label="待检查双钩秒数" align="center" />
+      <el-table-column
+        prop="double_check_num"
+        label="双钩数量"
+        align="center"
+      />
+      <el-table-column
+        prop="double_check_interval"
+        label="待检查双钩秒数"
+        align="center"
+      />
       <el-table-column prop="check_phone" label="检测手机号" align="center" />
       <el-table-column prop="remark" label="备注" align="center" />
       <el-table-column prop="status" label="状态" align="center">
@@ -39,34 +67,28 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" width="50" align="center" fixed="right">
+      <el-table-column label="操作" width="130" align="center" fixed="right">
         <template slot-scope="scope">
-          <div class="flex-cb">
-            <el-button
-              v-if="scope.row.status == 0"
-              size="mini"
-              type="text"
-              @click="clickUse(scope.row)"
-              >使用</el-button
-            >
-          </div>
-          <div class="flex-cb">
-            <el-button
-              style="margin-left: 8px"
-              type="text"
-              size="mini"
-              @click="$refs.updateRef.open(scope.row)"
-            >
-              编辑
+          <el-button
+            v-if="scope.row.status == 0"
+            size="mini"
+            type="text"
+            @click="clickUse(scope.row)"
+            >使用</el-button
+          >
+          <el-button
+            style="margin:0 8px; "
+            type="text"
+            size="mini"
+            @click="$refs.updateRef.open(scope.row)"
+          >
+            编辑
+          </el-button>
+          <el-popconfirm title="确定删除吗？" @confirm="hanldeDel(scope.row)">
+            <el-button size="mini" type="text" slot="reference">
+              删除
             </el-button>
-           </div>
-           <div class="flex-cb">
-            <el-popconfirm title="确定删除吗？" @confirm="hanldeDel(scope.row)">
-              <el-button size="mini" type="text" slot="reference">
-                删除
-              </el-button>
-            </el-popconfirm>
-          </div>
+          </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
@@ -81,16 +103,21 @@
       layout="sizes, prev, pager, next"
       :total="total"
     />
-    <Update ref="updateRef" @conform="getList" />
+    <Update ref="updateRef" @confirm="getList" />
   </div>
 </template>
 
 <script>
-import { deviceAccounts, useDeviceAccount, addDeviceAccount,delDeviceAccount } from "@/api";
-import Update from './Update'
+import {
+  deviceAccounts,
+  useDeviceAccount,
+  addDeviceAccount,
+  delDeviceAccount,
+} from "@/api";
+import Update from "./Update";
 
 export default {
-  components:{Update},
+  components: { Update },
   data() {
     return {
       form: {},
@@ -116,18 +143,18 @@ export default {
       this.getList();
     },
 
-  /**
+    /**
      * 单删除
      */
     async hanldeDel(row) {
       const params = { id: row.id };
       const { code } = await delDeviceAccount(params);
-        if (code == 200) {
-          this.$message.success("操作成功");
-        } else {
-          this.$message.error("操作失败");
-        }
-        this.getList();
+      if (code == 200) {
+        this.$message.success("操作成功");
+      } else {
+        this.$message.error("操作失败");
+      }
+      this.getList();
     },
 
     /**
@@ -164,7 +191,6 @@ export default {
         })
         .catch(() => {});
     },
-
 
     isNumber(val) {
       var regPos = /^\d+(\.\d+)?$/; //非负浮点数
