@@ -18,7 +18,8 @@
               <el-radio :label="5">表情</el-radio>
             </el-radio-group>
           </el-form-item>
-          <el-form-item label="文字内容" prop="content" v-if="form.type == 1 || form.type == 5">
+          <el-form-item label="表情内容(多个用逗号分隔，会随机其中一个表情发送)" label-width="190px" 
+            prop="content" v-if="form.type == 5">
             <el-input
               type="textarea"
               :rows="4"
@@ -36,6 +37,23 @@
             </div>
           </el-form-item>
 
+          <el-form-item label="文字内容" prop="content" v-if="form.type == 1">
+            <el-input
+              type="textarea"
+              :rows="4"
+              v-model="form.content"
+            ></el-input>
+            <div class="flex-c emo-list">
+              <div
+                class="emo-item"
+                v-for="(item, index) in emoList"
+                :key="index"
+                @click="selectEmo(item)"
+              >
+                {{ item }}
+              </div>
+            </div>
+          </el-form-item>
           <el-form-item label="语音内容" prop="content" v-if="form.type == 2">
             <UploadVideo v-model="form.content" />
           </el-form-item>
